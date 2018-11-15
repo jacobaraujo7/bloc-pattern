@@ -5,7 +5,7 @@ Apenas um Provider para implementar o Bloc no seu Código Flutter
 ## Iniciando
 
 
-Adicione o `bloc_pattern` no seu pubspec.yaml.
+Adicione o [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) no seu pubspec.yaml.
 
 Crie um Controller Bloc implementando o `BlocBase` e adicione suas streams:
 
