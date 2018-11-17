@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:exemple/increment/increment-controller.dart';
 import 'package:flutter/material.dart';
+
+import 'increment-controller.dart';
 
 class IncrementWidget extends StatefulWidget {
   @override
