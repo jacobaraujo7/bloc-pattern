@@ -10,7 +10,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   BlocProvider({
     Key key,
     @required this.child,
-    @required this.bloc,
+    this.bloc,
   }): super(key: key);
 
   final T bloc;
@@ -20,8 +20,6 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   _BlocProviderState<T> createState() => _BlocProviderState<T>();
 
   static T of<T extends BlocBase>(BuildContext context){
-    // final type = _typeOf<BlocProvider<T>>();
-    // BlocProvider<T> provider = context.ancestorWidgetOfExactType(type);
     final type = _typeOf<_HelperBlocProvider<T>>();
     _HelperBlocProvider<T> provider = context.inheritFromWidgetOfExactType(type);
     return provider.bloc;
@@ -30,7 +28,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   static Type _typeOf<T>() => T;
 }
 
-class _BlocProviderState<T extends BlocBase> extends State<BlocProvider<BlocBase>>{
+class _BlocProviderState<T extends BlocBase> extends State<BlocProvider<BlocBase>> with TickerProviderStateMixin {
   @override
   void dispose(){
     widget.bloc.dispose();

@@ -1,13 +1,14 @@
 # Bloc Pattern
 
-Apenas um Provider para implementar o Bloc no seu Código Flutter
+Provider to implement Bloc Pattern in your Flutter code
 
-## Iniciando
+## Start
 
 
-Adicione o [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) no seu pubspec.yaml.
+Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
-Crie um Controller Bloc implementando o `BlocBase` e adicione suas streams:
+Create a Controller Bloc by implementing `BlocBase` and add its streams.
+OBS: You can pass the "context" in the Bloc.
 
 ``` dart
 import 'dart:async';
@@ -16,16 +17,25 @@ import 'package:rxdart/rxdart.dart';
 
 class BlocController implements BlocBase {
 
-//fluxo que recebe um numero e altera a contagem;
-var _counterController = BehaviorSubject<int>(seedValue: 0);
-//saida
-Stream<int> get outCounter => _counterController.stream;
-//entrada
-Sink<int> get inCounter => _counterController.sink;
+final BuildContext context;
+BlocController(this.context);
 
+//Stream that receives a number and changes the count;
+var _counterController = BehaviorSubject<int>(seedValue: 0);
+//output
+Stream<int> get outCounter => _counterController.stream;
+//input
+Sink<int> get inCounter => _counterController.sink;
 
 increment(){
     inCounter.add(_counterController.value+1);
+}
+
+nextPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SecondScreenWidget()),
+    );
 }
 
 @override
@@ -33,27 +43,36 @@ void dispose() {
     _counterController.close();
 }
 
-
 }
 
 ```
 
-Adicione o Provider no Widget principal da sua arvore de widgets passando como parametro o seu BlocController
+Add the Provider in the main widget of your widget tree by passing as your BlocController parameter
 
 ``` dart
 
-home: BlocProvider<BlocController>(
-        child: MyHomePage(title: 'Flutter Demo Home Page'),
-        bloc: BlocController(),
+...
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<BlocController>(
+      child: MaterialApp(
+        home: MyHomePage(),
       ),
-
-
+      bloc: BlocController(context),
+    );
+  }
 }
+
+...
 
 ```
 
-
-Agora você já pode recuperar seu Bloc em qualquer lugar de sua árvore de widget com ajuda do `BlocProvider`
+Now you can recover your Bloc anywhere in your widget tree with the help of `BlocProvider`
 
 ``` dart
 
@@ -69,8 +88,7 @@ Agora você já pode recuperar seu Bloc em qualquer lugar de sua árvore de widg
 
 ```
 
-
-Agora basta que use o `StreamBuilder` para receber os seus fluxos e alterar a UI sem precisar do SetState
+Now just use `StreamBuilder` to get your streams and change the UI without needing setState
 
 ``` dart
 
@@ -78,7 +96,7 @@ StreamBuilder(
     stream: bloc.outCounter,
     builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Text(
-        'Você tocou ${snapshot.data}',
+        '${snapshot.data}',
         style: Theme.of(context).textTheme.display1,
     );
     },

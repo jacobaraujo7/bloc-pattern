@@ -16,12 +16,7 @@ class IncrementWidget extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.navigate_next),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SegundaTelaWidget()),
-              );
-            },
+            onPressed: bloc.nextPage,
           )
         ],
       ),
