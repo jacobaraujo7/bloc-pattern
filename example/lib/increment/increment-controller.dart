@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class IncrementController extends BlocBase {
-  final BuildContext context;
-  IncrementController(this.context);
+  IncrementController();
 
   //fluxo da variavel counter
   var counter = 0;
@@ -15,12 +14,7 @@ class IncrementController extends BlocBase {
   Stream<int> get outCounter => _counterController.stream;
   Sink<int> get inCounter => _counterController.sink;
 
-  nextPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SegundaTelaWidget()),
-    );
-  }
+
 
   void increment() {
     counter++;

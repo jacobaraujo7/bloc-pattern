@@ -17,8 +17,7 @@ import 'package:rxdart/rxdart.dart';
 
 class BlocController implements BlocBase {
 
-final BuildContext context;
-BlocController(this.context);
+BlocController();
 
 //Stream that receives a number and changes the count;
 var _counterController = BehaviorSubject<int>(seedValue: 0);
@@ -29,13 +28,6 @@ Sink<int> get inCounter => _counterController.sink;
 
 increment(){
     inCounter.add(_counterController.value+1);
-}
-
-nextPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SecondScreenWidget()),
-    );
 }
 
 @override
@@ -63,7 +55,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         home: MyHomePage(),
       ),
-      bloc: BlocController(context),
+      bloc: BlocController(),
     );
   }
 }

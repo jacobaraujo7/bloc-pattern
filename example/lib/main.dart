@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         home: IncrementWidget(),
       ),
-      bloc: IncrementController(context),
+      bloc: IncrementController(),
     );
   }
 }
