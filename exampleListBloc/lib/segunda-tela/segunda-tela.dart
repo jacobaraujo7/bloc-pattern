@@ -8,7 +8,7 @@ class SegundaTelaWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final IncrementController bloc =
-        BlocProvider.of<IncrementController>(context);
+        BlocProviderList.of<IncrementController>(context);
 
     return Scaffold(
       appBar: AppBar(

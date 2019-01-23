@@ -65,3 +65,82 @@ class _HelperBlocProvider<T extends BlocBase> extends InheritedWidget {
     return oldWidget != this;
   }
 }
+
+
+class Bloc<T extends BlocBase> {
+  final T bloc;
+
+  Bloc(this.bloc);
+}
+
+class BlocProviderList extends StatefulWidget {
+  BlocProviderList({
+    Key key,
+    @required this.child,
+    this.listBloc,
+  }) : super(key: key);
+
+  final List<Bloc> listBloc;
+  final Widget child;
+
+  @override
+  _BlocProviderListState createState() => _BlocProviderListState();
+
+  static T of<T extends BlocBase>(BuildContext context) {
+    final type = _typeOf<_HelperBlocListProvider>();
+
+    _HelperBlocListProvider provider =
+    context.inheritFromWidgetOfExactType(type);
+
+    BlocBase bloc = provider.listBloc.where((bloc) => bloc.bloc is T).toList()[0]?.bloc;
+
+    return bloc;
+  }
+
+  static Type _typeOf<T>() => T;
+}
+
+class _BlocProviderListState extends State<BlocProviderList> {
+  @override
+  void dispose() {
+    print("dispose");
+
+    for (int i=0; i<=bloc.length;i++){
+      bloc[i].bloc.dispose();
+    }
+
+//    bloc.forEach((bloc){
+//      bloc.bloc.dispose();
+//    });
+
+    super.dispose();
+  }
+
+  List<Bloc> bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = widget.listBloc;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _HelperBlocListProvider(
+      child: widget.child,
+      listBloc: bloc,
+    );
+  }
+}
+
+class _HelperBlocListProvider extends InheritedWidget {
+  final List<Bloc> listBloc;
+
+  _HelperBlocListProvider({this.listBloc, Widget child}) : super(child: child);
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) {
+    return oldWidget != this;
+  }
+}
+

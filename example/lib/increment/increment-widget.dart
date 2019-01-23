@@ -1,5 +1,5 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:example/segunda-tela/segunda-tela.dart';
+import '../segunda-tela/segunda-tela.dart';
 import 'package:flutter/material.dart';
 
 import 'increment-controller.dart';
