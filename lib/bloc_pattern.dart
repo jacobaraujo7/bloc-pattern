@@ -103,7 +103,7 @@ class _BlocProviderListState extends State<BlocProviderList> {
   @override
   void dispose() {
 
-    for (int i=0; i<=bloc.length;i++){
+    for (int i=0; i<bloc.length;i++){
       bloc[i].bloc.dispose();
     }
 
