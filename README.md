@@ -1,4 +1,5 @@
 # Bloc Pattern
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6UTC2V72FL644&source=url)
 
 Provider to implement Bloc Pattern in your Flutter code
 
