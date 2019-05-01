@@ -1,7 +1,7 @@
 # Bloc Pattern
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6UTC2V72FL644&source=url)
 
-Provider to implement Bloc Pattern in your Flutter code
+Provider to implement Bloc Pattern with Dependency Injection
 
 ## Start
 
@@ -9,7 +9,6 @@ Provider to implement Bloc Pattern in your Flutter code
 Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
 Create a Controller Bloc by implementing `BlocBase` and add its streams.
-OBS: You can pass the "context" in the Bloc.
 
 ``` dart
 import 'dart:async';
@@ -54,11 +53,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<BlocController>(
+    return BlocProvider(
       child: MaterialApp(
-        home: MyHomePage(),
+        home: IncrementWidget(),
       ),
-      bloc: BlocController(),
+      blocs: [
+        //add yours BLoCs controlles
+        Bloc(() => BlocController()),
+      ],
     );
   }
 }
@@ -74,7 +76,7 @@ Now you can recover your Bloc anywhere in your widget tree with the help of `Blo
 @override
   Widget build(BuildContext context) {
     //recovering your Bloc
-  final BlocController bloc = BlocProvider.of<BlocController>(context);
+  final BlocController bloc = BlocProvider.injectBloc<BlocController>();
 
   ....
 
@@ -110,66 +112,9 @@ floatingActionButton: new FloatingActionButton(
 
 ```
 
-# Bloc Pattern With List
+# Dependency Injection
 
-Provider to implement a List Bloc Pattern in your Flutter code
-
-## Start
-
-Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
-
-Create one or more Controller Bloc by implementing `BlocBase` and add its streams.
-
-``` dart
-import 'dart:async';
-import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:rxdart/rxdart.dart';
-
-class BlocControllerOne implements BlocBase {
-   BlocControllerOne();
-
-   //Stream that receives a number and changes the count;
-   var _counterController = BehaviorSubject<int>(seedValue: 0);
-   //output
-   Stream<int> get outCounter => _counterController.stream;
-   //input
-   Sink<int> get inCounter => _counterController.sink;
-
-   increment(){
-      inCounter.add(_counterController.value+1);
-   }
-
-   @override
-   void dispose() {
-      _counterController.close();
-   }
-
-}
-
-class BlocControllerTwo implements BlocBase {
-   BlocControllerTwo();
-
-   //Stream that receives a number and changes the count;
-   var _counterController = BehaviorSubject<int>(seedValue: 0);
-   //output
-   Stream<int> get outCounter => _counterController.stream;
-   //input
-   Sink<int> get inCounter => _counterController.sink;
-
-   increment(){
-      inCounter.add(_counterController.value+1);
-   }
-
-   @override
-   void dispose() {
-      _counterController.close();
-   }
-
-}
-
-```
-
-Add the BlocProviderList in the main widget of your widget tree by passing as your BlocController parameter list
+Just like BLoC, you can also include in dependency injection other class. Ex: Services and Models
 
 ``` dart
 
@@ -181,13 +126,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProviderList(
+    return BlocProvider(
       child: MaterialApp(
         home: IncrementWidget(),
       ),
-      listBloc: [
-        Bloc(BlocControllerOne()),
-        Bloc(BlocControllerTwo())
+      blocs: [
+        //add yours BLoCs controlles
+        Bloc(() => BlocController()),
+      ],
+      //add Other Object to provider
+      dependencies: [
+        Dependency((i) => GeneralApi(), singleton: true),
+        Dependency((i) => UserModel(i['id'], i['name']), singleton: false),
+
       ],
     );
   }
@@ -197,23 +148,42 @@ class MyApp extends StatelessWidget {
 
 ```
 
-Now you can recover yours Blocs anywhere in your widget tree with the help of `BlocProviderList`
+You can define whether this dependency will behave as a singleton or not. Default is false.
+
+For injection, use:
 
 ``` dart
 
 @override
   Widget build(BuildContext context) {
-    //recovering yours Blocs
-  final BlocControllerOne blocOne = BlocProviderList.of<BlocControllerOne>(context);
-  final BlocControllerTwo blocTwo = BlocProviderList.of<BlocControllerTwo>(context);
-
+   
+    //recovering your API dependency
+  final GeneralApi api = BlocProvider.injectDependency<GeneralApi>();
+  
+  //Passing Data by Parameters
+  final UserModel user = BlocProvider.injectDependency<UserModel>({
+    "id": 1,
+    "name": "João"
+  });
   ....
-
 }
 
 ```
 
+# Dispose
 
+The data is automatically discarded when the application finishes, however if you want to do this manually or restart some injected singleton, use:
+
+``` dart
+//dispose BLoC
+final BlocController bloc = BlocProvider.disposeBloc<BlocController>();
+
+//dispose dependency
+BlocProvider.disposeDependency<GeneralApi>();
+
+```
+
+THAT´S ALL
 
 ## Para mais informações
 
