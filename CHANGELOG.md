@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.0(1 de Maio 2019)
+- BlocProvider e BlocProviderList agora são um.
+- Adicionado Injeção de dependências de BLoC.
+- Adicionado Injeção de dependências de Dependências.
+
 ## 1.1.2(8 de Dezembro 2018)
 - removida injeção de contexto
 
