@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:exampleinjector/api/general_api.dart';
 import 'package:rxdart/rxdart.dart';
 
 class IncrementController extends BlocBase {
-  IncrementController(){
-    print("IncrementController create");
+  
+  final GeneralApi api;
+
+  IncrementController(this.api){
+    
+    print("IncrementController create ${api.name}");
   }
 
   //fluxo da variavel counter

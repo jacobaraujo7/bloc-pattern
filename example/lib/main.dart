@@ -5,8 +5,26 @@ import 'api/general_api.dart';
 import 'increment/increment-controller.dart';
 import 'increment/decrement-controller.dart';
 import 'increment/increment-widget.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
+import 'dart:io' show Platform;
 
-void main() => runApp(MyApp());
+void main() {
+  _setTargetPlatformForDesktop();
+  runApp(MyApp());
+}
+
+void _setTargetPlatformForDesktop() {
+  TargetPlatform targetPlatform;
+  if (Platform.isMacOS) {
+    targetPlatform = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    targetPlatform = TargetPlatform.android;
+  }
+  if (targetPlatform != null) {
+    debugDefaultTargetPlatformOverride = targetPlatform;
+  }
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -17,11 +35,11 @@ class MyApp extends StatelessWidget {
         home: IncrementWidget(),
       ),
       blocs: [
-        Bloc(() => IncrementController()),
-        Bloc(() => DecrementController())
+        Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"John"}))),
+        Bloc((i) => DecrementController())
       ],
       dependencies: [
-        Dependency((i) => GeneralApi(i['name']), singleton: true),
+        Dependency((i) => GeneralApi(i.params['name'])),
       ],
     );
   }

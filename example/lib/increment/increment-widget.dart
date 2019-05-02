@@ -1,5 +1,5 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:exampleinjector/api/second/second_widget.dart';
+import 'package:exampleinjector/second/second_widget.dart';
 import 'decrement-controller.dart';
 import 'package:flutter/material.dart';
 import 'increment-controller.dart';
@@ -7,8 +7,9 @@ import 'increment-controller.dart';
 class IncrementWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     final IncrementController bloc =
-        BlocProvider.injectBloc<IncrementController>();
+        BlocProvider.getBloc<IncrementController>();
 
     //deprecated
     final DecrementController blocDec =

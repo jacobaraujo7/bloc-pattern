@@ -5,7 +5,7 @@ Provider to implement Bloc Pattern with Dependency Injection
 
 ## Start
 
-
+s
 Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
 Create a Controller Bloc by implementing `BlocBase` and add its streams.
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
       blocs: [
         //add yours BLoCs controlles
-        Bloc(() => BlocController()),
+        Bloc((i) => BlocController()),
       ],
     );
   }
@@ -76,7 +76,7 @@ Now you can recover your Bloc anywhere in your widget tree with the help of `Blo
 @override
   Widget build(BuildContext context) {
     //recovering your Bloc
-  final BlocController bloc = BlocProvider.injectBloc<BlocController>();
+  final BlocController bloc = BlocProvider.getBloc<BlocController>();
 
   ....
 
@@ -130,15 +130,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         home: IncrementWidget(),
       ),
-      blocs: [
-        //add yours BLoCs controlles
-        Bloc(() => BlocController()),
+      //add yours BLoCs controlles
+       blocs: [
+        Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"John"}))),
+        Bloc((i) => DecrementController())
       ],
       //add Other Object to provider
       dependencies: [
-        Dependency((i) => GeneralApi(), singleton: true),
-        Dependency((i) => UserModel(i['id'], i['name']), singleton: false),
-
+        Dependency((i) => GeneralApi(i.params['name'])),
       ],
     );
   }
@@ -158,10 +157,10 @@ For injection, use:
   Widget build(BuildContext context) {
    
     //recovering your API dependency
-  final GeneralApi api = BlocProvider.injectDependency<GeneralApi>();
+  final GeneralApi api = BlocProvider.getDependency<GeneralApi>();
   
   //Passing Data by Parameters
-  final UserModel user = BlocProvider.injectDependency<UserModel>({
+  final UserModel user = BlocProvider.getDependency<UserModel>({
     "id": 1,
     "name": "João"
   });
@@ -180,6 +179,20 @@ final BlocController bloc = BlocProvider.disposeBloc<BlocController>();
 
 //dispose dependency
 BlocProvider.disposeDependency<GeneralApi>();
+
+```
+
+Extend you Service or Repositore with Disposable for automatic dipose.
+
+``` dart
+
+class GeneralApi extends Disposable {
+
+  @override
+  void dispose(){
+    //dispose Objects
+  }
+}
 
 ```
 

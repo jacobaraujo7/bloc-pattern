@@ -1,5 +1,7 @@
 import 'package:bloc_pattern/src/bloc.dart';
 import 'package:bloc_pattern/src/bloc_base.dart';
+import 'package:bloc_pattern/src/disposable.dart';
+import 'package:bloc_pattern/src/inject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dependency.dart';
@@ -25,9 +27,10 @@ class BlocProvider extends StatefulWidget {
 
  
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
-  static T injectBloc<T extends BlocBase>() {
-    return of<T>(_viability);
+  static T getBloc<T extends BlocBase>([Map<String, dynamic> params]) {
+    return of<T>(_viability, params: params);
   }
+
 
 ///Discards BLoC from application memory
   static void disposeBloc<T extends BlocBase>() {
@@ -41,7 +44,7 @@ class BlocProvider extends StatefulWidget {
   }
 
 ///Use to inject a Dependency. If the Dependency is not instantiated, it starts a new instance. If it is marked as a singleton, the instance persists until the end of the application, or until the [disposeDependency];
-  static T injectDependency<T>([Map<String, dynamic> map]) {
+  static T getDependency<T>([Map<String, dynamic> map]) {
     _HelperBlocListProvider provider = _getProvider(_viability);
     String typeBloc = T.toString();
     T dep;
@@ -49,8 +52,8 @@ class BlocProvider extends StatefulWidget {
       dep = _injectMapDependency[typeBloc];
     } else {
       Dependency d = provider.dependencies
-          .firstWhere((dep) => dep.inject is T Function(Map<String, dynamic>));
-      dep = d.inject(map);
+          .firstWhere((dep) => dep.inject is T Function(Inject));
+      dep = d.inject(Inject(map));
       if (d.singleton) {
         _injectMapDependency[typeBloc] = dep;
       }
@@ -61,13 +64,16 @@ class BlocProvider extends StatefulWidget {
   ///Discards Dependency from application memory
   static void disposeDependency<T>() {
       String typeBloc = T.toString();
-      if (_injectMapDependency.containsKey(typeBloc))
+      if (_injectMapDependency.containsKey(typeBloc)){
+        if(_injectMapDependency[typeBloc] is Disposable)
+          _injectMapDependency[typeBloc].dispose();
         _injectMapDependency.remove([typeBloc]);
+      }
   }
 
-  ///This method is deprecated. Use [injectBloc]
+  ///This method is deprecated. Use [getBloc]
   @deprecated
-  static T of<T extends BlocBase>(BuildContext context) {
+  static T of<T extends BlocBase>(BuildContext context, {Map<String, dynamic> params}) {
     try {
       _HelperBlocListProvider provider = _getProvider(context);
       BlocBase bloc;
@@ -76,14 +82,14 @@ class BlocProvider extends StatefulWidget {
         bloc = _injectMapBloc[typeBloc];
       } else {
         bloc = provider.blocs
-            .where((bloc) => bloc.inject is T Function())
+            .where((bloc) => bloc.inject is T Function(Inject))
             .toList()[0]
-            ?.inject();
+            ?.inject(Inject(params));
         _injectMapBloc[typeBloc] = bloc;
       }
       return bloc;
     } catch (e) {
-      throw "Bloc não encontrado";
+      throw "Bloc not found";
     }
   }
 
@@ -103,6 +109,15 @@ class _BlocProviderListState extends State<BlocProvider> {
     for (String key in _injectMapBloc.keys) {
       _injectMapBloc[key].dispose();
     }
+
+    _injectMapBloc.clear();
+
+    for (String key in _injectMapDependency.keys) {
+      if(_injectMapDependency[key] is Disposable)
+        _injectMapDependency[key].dispose();
+    }
+
+    _injectMapDependency.clear();
 
     super.dispose();
   }
