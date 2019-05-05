@@ -4,8 +4,8 @@ import 'package:bloc_pattern/src/inject.dart';
 class Bloc<T extends BlocBase> {
   
   final T Function(Inject i) inject;
+  final bool singleton;
   
-  Bloc(this.inject);
-
+  Bloc(this.inject, {this.singleton = true});
 
 }

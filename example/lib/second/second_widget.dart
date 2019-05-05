@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class SecondWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
     IncrementController bloc = BlocProvider.getBloc<IncrementController>();
 
     return Scaffold(
