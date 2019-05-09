@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.7
+- Correções nos parametros.
+
 ## 2.0.1(1 de Maio 2019)
 - BlocProvider e BlocProviderList agora são um.
 - Adicionado Injeção de dependências de BLoC.
