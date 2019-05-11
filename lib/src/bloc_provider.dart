@@ -13,23 +13,22 @@ class BlocProvider extends StatefulWidget {
     @required this.child,
     this.blocs,
     this.dependencies,
-  //  this.views,
-    tag = "global",
+    //  this.views,
+    this.tagText = "global",
   }) : super(key: key) {
-    tagText = tag;
     if (!_injectMap.containsKey(tag)) {
-      _injectMap[tag] = Core(
+      _injectMap[tagText] = Core(
         blocs: this.blocs,
         dependencies: this.dependencies,
-      //  views: this.views,
+        //  views: this.views,
       );
     }
   }
 
   final List<Bloc> blocs;
   final List<Dependency> dependencies;
-  String tagText;
- // final List<Widget> views;
+  final String tagText;
+  // final List<Widget> views;
   final Widget child;
 
   @override
@@ -63,11 +62,9 @@ class BlocProvider extends StatefulWidget {
     Core core = _injectMap[tagText];
     core.removeDependency();
   }
-
 }
 
 class _BlocProviderListState extends State<BlocProvider> {
-
   @override
   void dispose() {
     Core core = _injectMap[widget.tagText];

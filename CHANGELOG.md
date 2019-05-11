@@ -1,25 +1,26 @@
-# Changelog
+## 2.1.8
+- Add Consumer pattern.
 
 ## 2.1.7
-- Correções nos parametros.
+- Corrections in the parameters.
 
-## 2.0.1(1 de Maio 2019)
-- BlocProvider e BlocProviderList agora são um.
-- Adicionado Injeção de dependências de BLoC.
-- Adicionado Injeção de dependências de Dependências.
+## 2.0.1 (May 1, 2019)
+- BlocProvider and BlocProviderList are now one.
+- Added Injection of BLoC dependencies.
+- Added Injection Dependencies.
 
-## 1.1.2(8 de Dezembro 2018)
-- removida injeção de contexto
+## 1.1.2 (December 8, 2018)
+- removed context injection
 
-## 1.1.1(8 de Dezembro 2018)
-- removida injeção de contexto
+## 1.1.1 (December 8, 2018)
+- removed context injection
 
-## 1.1.0(19 de Novembro 2018)
-- Injetado o context (BuildContext) no controller.
+## 1.1.0 (November 19, 2018)
+- Injected the context (BuildContext) into the controller.
 
-## 1.0.0(19 de Novembro 2018)
-- Suporte ao Dart 2.1
-- Ciclo de vida do Bloc aprimorado com acesso rápido em qualquer lugar do aplicativo.
+## 1.0.0 (November 19, 2018)
+- Support for Dart 2.1
+- Enhanced Bloc lifecycle with fast access anywhere in the application.
 
-## 0.1.0 (8 de Novembro 2018)
-- Provider com StatefulWidget.
+## 0.1.0 (November 8, 2018)
+- Provider with StatefulWidget.

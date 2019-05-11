@@ -9,7 +9,7 @@ class DecrementController extends BlocBase {
   }
 
   //fluxo da variavel counter
-  var _counterController = BehaviorSubject<int>(seedValue: 0);
+  var _counterController = BehaviorSubject<int>.seeded(0);
   Stream<int> get outCounter => _counterController.stream;
   Sink<int> get inCounter => _counterController.sink;
 
@@ -19,6 +19,7 @@ class DecrementController extends BlocBase {
 
   @override
   void dispose() {
+    super.dispose();
     print("DecrementController dispose");
 
     _counterController.close();

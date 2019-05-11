@@ -1,26 +1,110 @@
 # Bloc Pattern
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6UTC2V72FL644&source=url)
 
-Provider to implement Bloc Pattern with Dependency Injection
+Tools to implement BLoC Pattern with Dependency Injection in your project  
 
 ## Start
 
-s
 Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
-Create a Controller Bloc by implementing `BlocBase` and add its streams.
+## BLoC class
+
+Create the business logic class and extend to BlocBase
+
+``` dart
+import 'package:bloc_pattern/bloc_pattern.dart';
+
+class ValueBloc extends BlocBase {
+  double value = 0.0;
+
+  onChangeValue(double v) {
+    value = v;
+    notifyListeners();
+  }
+}
+```
+Now add the BlocProvider widget before MaterialApp
+
+
+``` dart
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      //add yours BLoCs controlles
+      blocs: [
+        Bloc((i) => ValueBloc()),
+      ],
+      //your main widget 
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomePage(),
+      ),
+    );
+  }
+}
+...
+```
+
+You can search for a BLoC class anywhere in your application using:
+
+``` dart
+    //recovering your Bloc
+  final ValueBloc bloc = BlocProvider.getBloc<ValueBloc>();
+```
+
+Or consume directly on the Target widget using Consumer<T>().
+
+``` dart
+    //Cosume your BLoC
+  Consumer<ValueBloc>(
+    builder: (BuildContext context, ValueBloc valueBloc) {
+      return _textValue(valueBloc.value);
+    },
+  ),
+  Container(
+    height: 25,
+  ),
+  Consumer<ValueBloc>(
+    builder: (BuildContext context, ValueBloc valueBloc) {
+      return Slider(
+      activeColor: Colors.white,
+      inactiveColor: Colors.white,
+      min: 0.0,
+      max: 1.0,
+      onChanged: valueBloc.onChangeValue,
+      value: valueBloc.value);
+    },
+  ),
+```
+
+In this way, every time the ValueBloc onChangeValue method, the widgets inside the consumer will have new data.
+acesse o projeto completo [`clicando aqui`](https://github.com/jacobaraujo7/slider_bloc).
+
+
+## Using Streams and Reactive Programming (Rx)
+
+You can also use the provider to get BlocClasses that work with streams for more complex processing using reactive programming.
+
+
 
 ``` dart
 import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:rxdart/rxdart.dart';
 
-class BlocController implements BlocBase {
+class BlocController extends BlocBase {
 
 BlocController();
 
 //Stream that receives a number and changes the count;
-var _counterController = BehaviorSubject<int>(seedValue: 0);
+var _counterController = BehaviorSubject<int>.seeded(0);
 //output
 Stream<int> get outCounter => _counterController.stream;
 //input
@@ -30,11 +114,11 @@ increment(){
     inCounter.add(_counterController.value+1);
 }
 
-
-
+//dispose will be called automatically by closing its streams
 @override
 void dispose() {
-    _counterController.close();
+  _counterController.close();
+  super.dispose();
 }
 
 }
@@ -175,14 +259,31 @@ The data is automatically discarded when the application finishes, however if yo
 
 ``` dart
 //dispose BLoC
-final BlocController bloc = BlocProvider.disposeBloc<BlocController>();
+BlocProvider.disposeBloc<BlocController>();
 
 //dispose dependency
 BlocProvider.disposeDependency<GeneralApi>();
 
 ```
 
-Extend you Service or Repositore with Disposable for automatic dipose.
+
+[Optional] Add the dispose to your Bloc so that it can be called automatically or manually.
+
+``` dart
+
+class YourBloc extends BlocBase {
+
+  @override
+  void dispose(){
+    super.dispose
+    //dispose Objects
+  }
+}
+
+```
+
+
+[Optional] Extend you Service or Repositore with Disposable for automatic dipose.
 
 ``` dart
 

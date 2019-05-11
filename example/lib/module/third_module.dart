@@ -9,7 +9,7 @@ class ThirdModule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      tag: "third",
+      tagText: "third",
       child: ThirdWidget(),
       blocs: [
         Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"David"}))),

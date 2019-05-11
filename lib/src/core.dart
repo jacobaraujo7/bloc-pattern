@@ -45,7 +45,6 @@ class Core {
   }
 
   dependency<T>([Map<String, dynamic> params]) {
-    print(dependencies);
     String typeBloc = T.toString();
     T dep;
     if (_injectMapDependency.containsKey(typeBloc)) {
@@ -75,8 +74,7 @@ class Core {
 
     for (String key in _injectMapDependency.keys) {
       var dependency = _injectMapDependency[key];
-      if(dependency is Disposable)
-          dependency.dispose();
+      if (dependency is Disposable) dependency.dispose();
     }
     _injectMapDependency.clear();
   }
