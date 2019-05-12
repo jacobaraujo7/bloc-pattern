@@ -7,6 +7,22 @@ Tools to implement BLoC Pattern with Dependency Injection in your project
 
 Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
+## Install in Flutter Web
+
+
+Temporarily, the codes for flutter_web have been separated from the main package. But in the future they will be one.
+To use the bloc_pattern in flutter_web add in your pubspec:
+
+```
+dependencies:
+  bloc_pattern:
+    git:
+      url: https://github.com/jacobaraujo7/bloc-pattern.git
+      ref: web
+```
+
+# Using
+
 ## BLoC class
 
 Create the business logic class and extend to BlocBase
@@ -88,7 +104,7 @@ In this way, every time the ValueBloc onChangeValue method, the widgets inside t
 acesse o projeto completo [`clicando aqui`](https://github.com/jacobaraujo7/slider_bloc).
 
 
-## Using Streams and Reactive Programming (Rx)
+# Using Streams and Reactive Programming (Rx)
 
 You can also use the provider to get BlocClasses that work with streams for more complex processing using reactive programming.
 
