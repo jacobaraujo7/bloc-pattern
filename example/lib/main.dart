@@ -1,11 +1,11 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 
 import 'api/general_api.dart';
 import 'increment/increment-controller.dart';
 import 'increment/decrement-controller.dart';
 import 'increment/increment-widget.dart';
-import 'package:flutter/foundation.dart'
+import 'package:flutter_web/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'dart:io' show Platform;
 

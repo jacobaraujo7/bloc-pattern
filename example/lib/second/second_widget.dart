@@ -1,6 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:exampleinjector/increment/increment-controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 
 class SecondWidget extends StatelessWidget {
   @override

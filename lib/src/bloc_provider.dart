@@ -1,8 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:bloc_pattern/src/bloc.dart';
 import 'package:bloc_pattern/src/bloc_base.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_web/cupertino.dart';
+import 'package:flutter_web/material.dart';
 import 'dependency.dart';
 
 final Map<String, Core> _injectMap = {};

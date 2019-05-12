@@ -2,7 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:exampleinjector/api/general_api.dart';
 import 'package:exampleinjector/increment/decrement-controller.dart';
 import 'package:exampleinjector/increment/increment-controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 
 
 class ThirdModule extends StatelessWidget {
