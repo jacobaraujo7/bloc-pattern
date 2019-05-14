@@ -19,14 +19,14 @@ class _ConsumerState<T extends BlocBase> extends State<Consumer<T>> {
 
   void listener() {
     setState(() {
-      value = BlocProvider.tag(widget.tag).getBloc<T>();
+      value = BlocProvider.tag(tag).getBloc<T>();
     });
   }
 
   @override
   void initState() {
-     tag = widget.module?.toString() ?? widget.tag;
-    value = BlocProvider.tag(widget.tag).getBloc<T>();
+    tag = widget.module?.toString() ?? widget.tag;
+    value = BlocProvider.tag(tag).getBloc<T>();
     value.addListener(listener);
     super.initState();
   }

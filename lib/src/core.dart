@@ -32,7 +32,7 @@ class Core {
     String type = T.toString();
     if (_injectMapBloc.containsKey(type)) {
       try {
-         _injectMapBloc[type].dispose();
+        _injectMapBloc[type].dispose();
       } catch (e) {
         print(e);
       }
