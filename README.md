@@ -269,6 +269,31 @@ For injection, use:
 
 ```
 
+# Tag Module
+
+Now you can create other BlocProvider's independently. To do this use the "tag" property giving a name for your new BlocProvider segment.
+
+``` dart
+
+...
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      //tag module
+      tag: "newModule",
+  ...
+
+```
+From here you can call your blocks and dependency registered in your new module using:
+
+``` dart
+    BlocProvider.tag("newModule").getBloc<BlocController>();
+```
+
+When you exit your tree of widget elements your BlocProvider will call the dispose () of that module only.X
+
+
+
 # Dispose
 
 The data is automatically discarded when the application finishes, however if you want to do this manually or restart some injected singleton, use:
