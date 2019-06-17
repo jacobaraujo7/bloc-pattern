@@ -1,6 +1,6 @@
 name: bloc_pattern
 description: Apenas um package com bases para implantar o Bloc no seu Código.
-version: 2.2.0+1
+version: 2.2.0+2
 author: Jacob Moura <jacobaraujo7@gmail.com>
 homepage: https://github.com/jacobaraujo7/bloc-pattern
 
