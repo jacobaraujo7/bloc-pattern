@@ -1,10 +1,12 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 
-class Inject {
+class Inject<T> {
   Map<String, dynamic> params = {};
   final String tag;
 
   Inject({this.params, this.tag = "global"});
+
+  factory Inject.of() => Inject(tag: T.toString());
 
   ///get injected dependency
   get<T>([Map<String, dynamic> params]) {
@@ -17,12 +19,12 @@ class Inject {
     return get<T>(params);
   }
 
-  disposeBloc<T>([String tag]) {
-    return BlocProvider.disposeBloc(tag);
+  disposeBloc<T extends BlocBase>([String tag]) {
+    return BlocProvider.disposeBloc<T>(tag);
   }
 
   disposeDependency<T>([String tag]) {
-    return BlocProvider.disposeDependency(tag);
+    return BlocProvider.disposeDependency<T>(tag);
   }
 
   ///get injected bloc;
