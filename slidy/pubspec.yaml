@@ -8,7 +8,9 @@ environment:
   sdk: '>=2.2.0 <3.0.0'
 
 dependencies:
+  ansicolor: ^1.0.2
 #  path: ^1.4.1
+
 
 dev_dependencies:
   pedantic: ^1.0.0
