@@ -1,8 +1,8 @@
+import 'package:slidy/src/utils/utils.dart';
+
 class ModuloModel {
   static String model(String name) {
-    String first = name[0];
-
-    String all = name.replaceFirst(first, first.toUpperCase());
+    String all = formatName(name);
 
     String values = '''
   class ${all}Module extends Module {
