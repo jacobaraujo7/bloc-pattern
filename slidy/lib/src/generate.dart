@@ -23,7 +23,7 @@ class Generate {
     print("Criando módulo....");
     try {
       print("Criando pastas...");
-      Directory directory = await Directory("src");
+      Directory directory = Directory(path);
       if (directory.existsSync()) {
         throw Exception("O caminho especificado já existe");
       } else {
