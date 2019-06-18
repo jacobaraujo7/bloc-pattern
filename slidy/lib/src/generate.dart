@@ -1,6 +1,5 @@
 class Generate {
 
-
   Generate(args){
     if(args[1] == 'module' || args[1] == 'm'){
        module(args[2]);
