@@ -1,3 +1,6 @@
+## 2.2.0+4 (Jun 19, 2019)
+- Fix error dispose bloc.
+
 ## 2.2.0+1 (Jun 14, 2019)
 - Introduced project modules.
 - Tag for each BlocProvider. You can use multiple BlocProvider independently.

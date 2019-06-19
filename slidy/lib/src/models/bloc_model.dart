@@ -1,6 +1,5 @@
 class BlocModel {
   String model(String name) => '''
-import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
 
 class ${name}Bloc extends BlocBase {

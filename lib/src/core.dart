@@ -30,8 +30,12 @@ class Core {
   removeBloc<T>() {
     String type = T.toString();
     if (_injectMapBloc.containsKey(type)) {
-      _injectMapBloc[type].dispose();
-      _injectMapBloc.remove([type]);
+      try {
+         _injectMapBloc[type].dispose();
+      } catch (e) {
+        print(e);
+      }
+      _injectMapBloc.remove(type);
     }
   }
 
@@ -40,7 +44,7 @@ class Core {
     if (_injectMapDependency.containsKey(type)) {
       if (_injectMapDependency[type] is Disposable)
         _injectMapDependency[type].dispose();
-      _injectMapDependency.remove([type]);
+      _injectMapDependency.remove(type);
     }
   }
 

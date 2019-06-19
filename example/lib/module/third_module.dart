@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
-class ThirdModule extends Module {
+class ThirdModule extends ModuleWidget {
   @override
   List<Bloc<BlocBase>> get blocs => [
         Bloc((i) => IncrementController(i.get<GeneralApi>({"name": "David"}))),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 
-abstract class Module extends StatelessWidget {
+abstract class ModuleWidget extends StatelessWidget {
 
   List<Bloc> get blocs;
   List<Dependency> get dependencies;

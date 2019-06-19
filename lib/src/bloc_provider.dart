@@ -54,13 +54,13 @@ class BlocProvider extends StatefulWidget {
   ///Discards BLoC from application memory
   static void disposeBloc<T extends BlocBase>([String tagText = "global"]) {
     Core core = _injectMap[tagText];
-    core.removeBloc<T>();
+    core?.removeBloc<T>();
   }
 
   ///Discards Dependency from application memory
   static void disposeDependency<T>([String tagText = "global"]) {
     Core core = _injectMap[tagText];
-    core.removeDependency<T>();
+    core?.removeDependency<T>();
   }
 }
 

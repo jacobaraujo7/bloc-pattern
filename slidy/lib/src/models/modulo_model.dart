@@ -2,10 +2,11 @@ import 'package:slidy/src/utils/utils.dart';
 
 class ModuloModel {
   static String model(String name) {
-    String all = formatName(name);
 
     String values = '''
-  class ${all}Module extends Module {
+    import 'package:bloc_pattern/bloc_pattern.dart';
+    import 'package:flutter/material.dart';
+  class ${name}Module extends Module {
   @override
   List<Bloc> get blocs => [];
 
@@ -15,7 +16,7 @@ class ModuloModel {
   @override
   Widget get view => Container();
 
-  static Inject get to => Inject<${all}Module>.of();
+  static Inject get to => Inject<${name}Module>.of();
 
 }
   ''';
