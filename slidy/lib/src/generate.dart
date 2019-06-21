@@ -67,7 +67,7 @@ class Generate {
     path = validPath(path);
     String name = basename(path);
     name = resolveName(name);
-    var fileview = File(path + "/" + "${name}_page.dart");
+    var fileview = File(path + "/" + "${name}_${isPage ? 'page' : 'widget'}.dart");
     if (fileview.existsSync()) {
       print(error("Já existe um component $name"));
       exit(1);
