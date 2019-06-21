@@ -5,65 +5,96 @@ import 'package:pubspec/pubspec.dart';
 import 'package:slidy/src/utils/utils.dart';
 
 class PackageManager {
-  install(String pack, bool isDev) async {
+  install(List<String> packs, bool isDev) async {
+    packs.removeAt(0);
+    packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
     var dependencies = isDev ? spec.devDependencies : spec.dependencies;
 
-    String packName = "";
-    String version = "";
+    for (String pack in packs) {
+      String packName = "";
+      String version = "";
 
-    if (pack.contains(":")) {
-      packName = pack.split(":")[0];
-      version = pack.split(":")[1];
-    } else {
-      packName = pack;
-    }
+      if (pack.contains(":")) {
+        packName = pack.split(":")[0];
+        version = pack.split(":")[1];
+      } else {
+        packName = pack;
+      }
 
-    if (dependencies.containsKey(packName)) {
-      print("Package já está instalado");
-      exit(1);
-    }
+      if (dependencies.containsKey(packName)) {
+        print("Package já está instalado");
+        continue;
+      }
 
-    try {
-      version = await consumeApi(packName, version);
-      dependencies[packName] =
-          HostedReference(VersionConstraint.parse("^$version"));
-      spec = isDev ? spec.copy(devDependencies: dependencies) : spec.copy(dependencies: dependencies);
-      await spec.save(Directory(""));
-      print("Add $packName:$version in pubspec");
-    } catch (e) {
-      print(e);
-      print("Versão ou package não encontrado");
+      try {
+        version = await consumeApi(packName, version);
+        dependencies[packName] =
+            HostedReference(VersionConstraint.parse("^$version"));
+        print("Add $packName:$version in pubspec");
+      } catch (e) {
+        print(e);
+        print("Versão ou package não encontrado");
+      }
+
+      spec = isDev
+            ? spec.copy(devDependencies: dependencies)
+            : spec.copy(dependencies: dependencies);
+        await spec.save(Directory(""));
+
     }
   }
 
-  update(String pack, bool isDev) async {
+  update(List<String> packs, bool isDev) async {
+    packs.removeAt(0);
+    packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
-        var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+    var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+
+    for (String pack in packs) {
+      
+    
 
     if (!dependencies.containsKey(pack)) {
       print("Package não está instalado");
-      exit(1);
+      continue;
     }
 
     String version = await consumeApi(pack, "");
     dependencies[pack] = HostedReference(VersionConstraint.parse("^$version"));
-    spec = isDev ? spec.copy(devDependencies: dependencies) : spec.copy(dependencies: dependencies);
-    await spec.save(Directory(""));
+    
     print("Update $pack in pubspec");
+    }
+
+    spec = isDev
+        ? spec.copy(devDependencies: dependencies)
+        : spec.copy(dependencies: dependencies);
+    await spec.save(Directory(""));
+
   }
 
-  uninstall(String pack, bool isDev) async {
-    PubSpec spec = await getPubSpec();
-        var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+  uninstall(List<String> packs, bool isDev) async {
+    packs.removeAt(0);
+    packs.removeWhere((t) => t == "--dev");
+     PubSpec spec = await getPubSpec();
+    var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+
+    for(String pack in packs){
+
+   
 
     if (!dependencies.containsKey(pack)) {
       print("Package não está instalado");
-      exit(1);
+      continue;
     }
     dependencies.remove(pack);
-    spec = isDev ? spec.copy(devDependencies: dependencies) : spec.copy(dependencies: dependencies);
-    await spec.save(Directory(""));
+    
     print("Remove $pack from pubspec");
+  }
+
+  spec = isDev
+        ? spec.copy(devDependencies: dependencies)
+        : spec.copy(dependencies: dependencies);
+    await spec.save(Directory(""));
   }
 }

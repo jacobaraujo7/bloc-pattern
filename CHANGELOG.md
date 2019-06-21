@@ -1,3 +1,6 @@
+## 2.2.0+5 (Jun 21, 2019)
+- Fix error consumer module.
+
 ## 2.2.0+4 (Jun 19, 2019)
 - Fix error dispose bloc.
 
