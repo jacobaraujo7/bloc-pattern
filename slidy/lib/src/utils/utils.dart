@@ -11,6 +11,10 @@ String formatName(String name) {
   return name;
 }
 
+String resolveName(String name) {
+  return name.replaceAll(RegExp(r"[^a-zA-Z0-9]"), "_");
+}
+
 Future<String> getNamePackage() async {
   File f = new File("pubspec.yaml");
   String node = await f.readAsString();

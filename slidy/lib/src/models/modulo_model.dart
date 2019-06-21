@@ -1,4 +1,3 @@
-import 'package:slidy/src/utils/utils.dart';
 
 class ModuloModel {
   static String model(String name) {
@@ -6,7 +5,7 @@ class ModuloModel {
     String values = '''
     import 'package:bloc_pattern/bloc_pattern.dart';
     import 'package:flutter/material.dart';
-  class ${name}Module extends Module {
+  class ${name}Module extends ModuleWidget {
   @override
   List<Bloc> get blocs => [];
 
