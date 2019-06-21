@@ -33,9 +33,9 @@ class Init {
     File(dir.path + "/src/app_bloc.dart")..createSync(recursive: true)..writeAsStringSync(AppInitModel().appBloc());
     File(dir.path + "/src/app_widget.dart")..createSync(recursive: true)..writeAsStringSync(AppInitModel().appWidget(package));
     
-    // await Generate(["", ""])..module("home/home");
-    // await Future.delayed(Duration(milliseconds: 800));
-    // await Generate(["", ""])..component("home", true);
+    await Generate(["", ""])..module("home/home");
+    await Future.delayed(Duration(milliseconds: 800));
+    await Generate(["", ""])..component("home", true);
 
   }
 
