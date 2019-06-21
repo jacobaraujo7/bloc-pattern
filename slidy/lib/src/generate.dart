@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:slidy/src/models/repository_model.dart';
 import 'package:slidy/src/utils/utils.dart';
 
 import 'models/bloc_model.dart';
@@ -138,7 +139,7 @@ class Generate {
     print(white("Criando arquivo..."));
     String nameCap = formatName(name);
     filerepo.createSync();
-    filerepo.writeAsStringSync(BlocModel().model(nameCap));
+    filerepo.writeAsStringSync(RepositoryModel().model(nameCap));
     Process.runSync("flutter", ["format", filerepo.path], runInShell: true);
     print("Criado arquivos ${white(filerepo.path)}");
     await addModule(nameCap, filerepo.path, ModuleType.REPOSITORY);
