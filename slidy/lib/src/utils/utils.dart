@@ -1,6 +1,27 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:yaml/yaml.dart';
+import 'package:pubspec/pubspec.dart';
+import 'package:http/http.dart' as http;
+
+String URL_API = "https://pub.dartlang.org/api/packages";
+
+Future<String> consumeApi(String pack, String version) async {
+  String url = URL_API + "/$pack";
+
+  if (version.isNotEmpty) {
+    url =  url + "/versions/" + version;
+  }
+  var response = await http.get(url);
+  var json = jsonDecode(response.body);
+  var map = version.isNotEmpty ? json['pubspec'] : json['latest']['pubspec'];
+  return map['version']; 
+
+}
+
+savePub(Map spec){
+   //File("pubspec.yaml").writeAsStringSync(yaml. );
+}
 
 String formatName(String name) {
   name = name
@@ -16,8 +37,20 @@ String resolveName(String name) {
 }
 
 Future<String> getNamePackage() async {
-  File f = new File("pubspec.yaml");
-  String node = await f.readAsString();
-  Map yaml = loadYaml(node);
-  return yaml['name'];
+  PubSpec yaml = await getPubSpec();
+  return yaml.name;
+}
+
+Future<String> getVersion() async {
+  PubSpec yaml = await getPubSpec(path: File.fromUri(Platform.script).parent.parent.path);
+  return yaml.version.toString();
+}
+
+Future<PubSpec> getPubSpec({String path = ""}) async {
+  var pubSpec = await PubSpec.load(Directory(path));
+  return pubSpec;
+}
+
+bool checkParam(List<String> args, String param){
+  return args.contains(param);
 }

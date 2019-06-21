@@ -9,8 +9,9 @@ environment:
 
 dependencies:
   ansicolor: ^1.0.2
-  yaml: ^2.1.16
-#  path: ^1.4.1
+  pubspec: ^0.1.1
+  http: ^0.12.0+2
+  path: ^1.4.1
 
 
 executables:
