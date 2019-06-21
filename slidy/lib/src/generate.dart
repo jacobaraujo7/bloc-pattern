@@ -147,10 +147,13 @@ class Generate {
 
   addModule(String nameCap, String path, ModuleType type) async {
     File module = findModule(path);
+    
     if (module == null) {
       print(error("Nenhum módulo encontrado"));
       exit(1);
-    }
+    } else {
+       module = File(module.path.replaceAll("\\", "/") );
+    }   
 
     var node = module.readAsStringSync().split("\n");
     node.insert(0,
@@ -158,6 +161,7 @@ class Generate {
 
     if (ModuleType.BLOC == type) {
       int index = node.indexWhere((t) => t.contains("blocs => ["));
+      
       node[index] = node[index].replaceFirst(
           "blocs => [", "blocs => [Bloc((i) => ${nameCap}Bloc()),");
     } else if (ModuleType.REPOSITORY == type) {
