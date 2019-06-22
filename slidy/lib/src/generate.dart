@@ -20,9 +20,9 @@ class Generate {
     if (args[1] == 'module' || args[1] == 'm') {
       module(args[2]);
     } else if (args[1] == 'page' || args[1] == 'p') {
-      component(args[2], true);
+      component(args[2], true, checkParam(args, "-b"));
     } else if (args[1] == 'widget' || args[1] == 'w') {
-      component(args[2], false);
+      component(args[2], false, checkParam(args, "-b"));
     } else if (args[1] == 'bloc' || args[1] == 'b') {
       bloc(args[2]);
     } else if (args[1] == 'repository' || args[1] == 'r') {
@@ -63,36 +63,46 @@ class Generate {
     }
   }
 
-  component(String path, bool isPage) async {
+  component(String path, bool isPage, bool blocLess) async {
     path = validPath(path);
     String name = basename(path);
     name = resolveName(name);
-    var fileview = File(path + "/" + "${name}_${isPage ? 'page' : 'widget'}.dart");
+    String nameCap = formatName(name);
+
+    print(white("Criando view..."));
+
+    var fileview =
+        File(path + "/" + "${name}_${isPage ? 'page' : 'widget'}.dart");
     if (fileview.existsSync()) {
       print(error("Já existe um component $name"));
       exit(1);
     } else {
       fileview.createSync(recursive: true);
     }
-
-    var filebloc = File(path + "/" + "${name}_bloc.dart");
-    if (filebloc.existsSync()) {
-      print(error("Já existe um component $name"));
-      exit(1);
-    } else {
-      filebloc.createSync(recursive: true);
-    }
-
-    print(white("Criando arquivos..."));
-    String nameCap = formatName(name);
     fileview.writeAsStringSync(
         isPage ? PageModel().model(nameCap) : WidgetModel().model(nameCap));
     Process.runSync("flutter", ["format", fileview.path], runInShell: true);
     print("Criado arquivo ${white(fileview.path)}");
-    filebloc.writeAsStringSync(BlocModel().model(nameCap));
-    Process.runSync("flutter", ["format", filebloc.path], runInShell: true);
-    print("Criado arquivo ${white(filebloc.path)}");
-    await addModule(nameCap, filebloc.path, ModuleType.BLOC);
+
+    //create bloc
+
+    if (blocLess) {
+      print(white("Criando bloc..."));
+
+      var filebloc = File(path + "/" + "${name}_bloc.dart");
+      if (filebloc.existsSync()) {
+        print(error("Já existe um component $name"));
+        exit(1);
+      } else {
+        filebloc.createSync(recursive: true);
+      }
+
+      filebloc.writeAsStringSync(BlocModel().model(nameCap));
+      Process.runSync("flutter", ["format", filebloc.path], runInShell: true);
+      print("Criado arquivo ${white(filebloc.path)}");
+      await addModule(nameCap, filebloc.path, ModuleType.BLOC);
+    }
+
     print(green("Completed!"));
   }
 
@@ -148,21 +158,21 @@ class Generate {
 
   addModule(String nameCap, String path, ModuleType type) async {
     File module = findModule(path);
-    
+
     if (module == null) {
       print(error("Nenhum módulo encontrado"));
       exit(1);
     } else {
-       module = File(module.path.replaceAll("\\", "/") );
-    }   
+      module = File(module.path.replaceAll("\\", "/"));
+    }
 
     var node = module.readAsStringSync().split("\n");
     node.insert(0,
-        "import 'package:${await getNamePackage()}/${path.replaceFirst("lib/", "")}';");
+        "import 'package:${await getNamePackage()}/${path.replaceFirst("lib/", "").replaceAll("\\", "/")}';");
 
     if (ModuleType.BLOC == type) {
       int index = node.indexWhere((t) => t.contains("blocs => ["));
-      
+
       node[index] = node[index].replaceFirst(
           "blocs => [", "blocs => [Bloc((i) => ${nameCap}Bloc()),");
     } else if (ModuleType.REPOSITORY == type) {

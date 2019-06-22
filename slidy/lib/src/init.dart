@@ -38,7 +38,7 @@ class Init {
     await Future.delayed(Duration(milliseconds: 800));
     await Generate(["", ""])..module("home/home");
     await Future.delayed(Duration(milliseconds: 800));
-    await Generate(["", ""])..component("home", true);
+    await Generate(["", ""])..component("home", true, false);
 
   }
 
