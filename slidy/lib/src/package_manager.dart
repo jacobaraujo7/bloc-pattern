@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:pub_semver/pub_semver.dart';
 import 'package:pubspec/pubspec.dart';
 import 'package:slidy/src/utils/utils.dart';
 
 class PackageManager {
-  install(List<String> packs, bool isDev) async {
+  install(List<String> args, bool isDev) async {
+    List<String> packs = List.from(args);
     packs.removeAt(0);
     packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
@@ -30,7 +30,7 @@ class PackageManager {
       }
 
       if (dependencies.containsKey(packName)) {
-        print("Package já está instalado");
+        await update(["update", packName], isDev);
         continue;
       }
 
@@ -55,7 +55,8 @@ class PackageManager {
     }
   }
 
-  update(List<String> packs, bool isDev) async {
+  update(List<String> args, bool isDev) async {
+    List<String> packs = List.from(args);
     packs.removeAt(0);
     packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
@@ -69,7 +70,7 @@ class PackageManager {
         print("Package não está instalado");
         continue;
       }
-      
+
       isAlter = true;
 
       String version = await consumeApi(pack, "");
@@ -89,7 +90,8 @@ class PackageManager {
     // await spec.save(Directory(""));
   }
 
-  uninstall(List<String> packs, bool isDev) async {
+  uninstall(List<String> args, bool isDev) async {
+    List<String> packs = List.from(args);
     packs.removeAt(0);
     packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();

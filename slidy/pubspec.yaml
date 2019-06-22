@@ -1,8 +1,8 @@
 name: slidy
-description: CLI for Flutter application
-version: 0.0.1
-homepage: https://www.example.com
-author: jacobmoura7 <tecleigo@gmail.com>
+description: Package and template manager for Flutter Project
+version: 0.0.9
+author: Jacob Moura <jacobaraujo7@gmail.com>
+homepage: https://github.com/jacobaraujo7/bloc-pattern
 
 environment:
   sdk: '>=2.2.0 <3.0.0'

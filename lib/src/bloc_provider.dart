@@ -20,6 +20,7 @@ class BlocProvider extends StatefulWidget {
       _injectMap[tagText] = Core(
         blocs: this.blocs,
         dependencies: this.dependencies,
+        tag: this.tagText,
         //  views: this.views,
       );
     }

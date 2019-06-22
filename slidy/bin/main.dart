@@ -1,11 +1,21 @@
 
+import 'dart:io';
+
 import 'package:slidy/slidy.dart';
 import 'package:slidy/src/init.dart';
 import 'package:slidy/src/package_manager.dart';
 
 import 'package:slidy/src/utils/utils.dart';
 
+String VERSION = "0.0.9";
+
 main(List<String> args) async {
+
+  if(args.isEmpty){
+    print("Slidy version: $VERSION");
+    return;
+  }
+
   if(args[0] == "generate" || args[0] == "g"){
     print("Gerador iniciado....");
     Generate(args);
@@ -18,7 +28,12 @@ main(List<String> args) async {
   } else if(args[0] == "update"){
     PackageManager().update(args, checkParam(args, "--dev"));
   } else if(args[0] == "--version" || args[0] == "-v"){
-    print("Slidy version:${await getVersion()}");
+    print("Slidy version: $VERSION");
+  } else if(args[0] == "upgrade"){
+    print("Atualizando...");
+    Process.runSync("pub", ["global", "activate", "slidy"], runInShell: true);
+    var process = Process.runSync("slidy", ["-v"], runInShell: true);
+    print(process.stdout);
   } else {
     print("Comando inválido");
 

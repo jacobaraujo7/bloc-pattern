@@ -9,13 +9,13 @@ class Inject<T> {
   factory Inject.of() => Inject(tag: T.toString());
 
   ///get injected dependency
-  get<T>([Map<String, dynamic> params]) {
+  T get<T>([Map<String, dynamic> params]) {
     params ??= {};
     return BlocProvider.getDependency<T>(params, tag);
   }
 
   ///get injected dependency
-  getDependency<T>([Map<String, dynamic> params]) {
+  T getDependency<T>([Map<String, dynamic> params]) {
     return get<T>(params);
   }
 
@@ -28,13 +28,13 @@ class Inject<T> {
   }
 
   ///get injected bloc;
-  bloc<T extends BlocBase>([Map<String, dynamic> params]) {
+  T bloc<T extends BlocBase>([Map<String, dynamic> params]) {
     params ??= {};
     return BlocProvider.getBloc<T>(params, tag);
   }
 
   ///get injected bloc;
-  getBloc<T extends BlocBase>([Map<String, dynamic> params]) {
+  T getBloc<T extends BlocBase>([Map<String, dynamic> params]) {
     params ??= {};
     return bloc<T>(params);
   }

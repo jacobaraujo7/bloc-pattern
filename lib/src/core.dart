@@ -9,8 +9,9 @@ class Core {
   final List<Bloc> blocs;
   final List<Dependency> dependencies;
   final List<Widget> views;
+  final String tag;
 
-  Core({this.blocs, this.dependencies, this.views});
+  Core({this.blocs, this.dependencies, this.views, this.tag});
 
   BlocBase bloc<T extends BlocBase>([Map<String, dynamic> params]) {
     String typeBloc = T.toString();
@@ -19,7 +20,7 @@ class Core {
       blocBase = _injectMapBloc[typeBloc];
     } else {
       Bloc b = blocs.firstWhere((b) => b.inject is T Function(Inject));
-      blocBase = b.inject(Inject(params: params));
+      blocBase = b.inject(Inject(params: params, tag: tag));
       if (b.singleton) {
         _injectMapBloc[typeBloc] = blocBase;
       }
@@ -56,7 +57,7 @@ class Core {
     } else {
       Dependency d =
           dependencies.firstWhere((dep) => dep.inject is T Function(Inject));
-      dep = d.inject(Inject(params: params));
+      dep = d.inject(Inject(params: params, tag: tag));
       if (d.singleton) {
         _injectMapDependency[typeBloc] = dep;
       }
