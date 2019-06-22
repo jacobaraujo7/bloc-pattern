@@ -7,7 +7,7 @@ import 'package:slidy/src/package_manager.dart';
 
 import 'package:slidy/src/utils/utils.dart';
 
-String VERSION = "0.0.9";
+String VERSION = "0.0.10";
 
 main(List<String> args) async {
 
