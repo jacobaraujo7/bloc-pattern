@@ -9,6 +9,13 @@ class PackageManager {
     packs.removeAt(0);
     packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
+    File yaml = File("pubspec.yaml");
+    var node = yaml.readAsLinesSync();
+    int indexDependency =
+        node.indexWhere((t) => t.contains("dependencies:")) + 1;
+    int indexDependencyDev =
+        node.indexWhere((t) => t.contains("dev_dependencies:")) + 1;
+    bool isAlter = false;
     var dependencies = isDev ? spec.devDependencies : spec.dependencies;
 
     for (String pack in packs) {
@@ -29,19 +36,22 @@ class PackageManager {
 
       try {
         version = await consumeApi(packName, version);
-        dependencies[packName] =
-            HostedReference(VersionConstraint.parse("^$version"));
+        node.insert(isDev ? indexDependencyDev : indexDependency,
+            "  $packName: ^$version");
         print("Add $packName:$version in pubspec");
+        isAlter = true;
       } catch (e) {
         print(e);
         print("Versão ou package não encontrado");
       }
 
-      spec = isDev
-            ? spec.copy(devDependencies: dependencies)
-            : spec.copy(dependencies: dependencies);
-        await spec.save(Directory(""));
-
+      // spec = isDev
+      //       ? spec.copy(devDependencies: dependencies)
+      //       : spec.copy(dependencies: dependencies);
+      //   await spec.save(Directory(""));
+      if (isAlter) {
+        yaml.writeAsStringSync(node.join("\n"));
+      }
     }
   }
 
@@ -50,51 +60,63 @@ class PackageManager {
     packs.removeWhere((t) => t == "--dev");
     PubSpec spec = await getPubSpec();
     var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+    File yaml = File("pubspec.yaml");
+    var node = yaml.readAsLinesSync();
+    bool isAlter = false;
 
     for (String pack in packs) {
+      if (!dependencies.containsKey(pack)) {
+        print("Package não está instalado");
+        continue;
+      }
       
-    
+      isAlter = true;
 
-    if (!dependencies.containsKey(pack)) {
-      print("Package não está instalado");
-      continue;
+      String version = await consumeApi(pack, "");
+      int index = node.indexWhere((t) => t.contains("  $pack:"));
+      node[index] = "  $pack: ^$version";
+
+      print("Update $pack in pubspec");
     }
 
-    String version = await consumeApi(pack, "");
-    dependencies[pack] = HostedReference(VersionConstraint.parse("^$version"));
-    
-    print("Update $pack in pubspec");
+    if (isAlter) {
+      yaml.writeAsStringSync(node.join("\n"));
     }
 
-    spec = isDev
-        ? spec.copy(devDependencies: dependencies)
-        : spec.copy(dependencies: dependencies);
-    await spec.save(Directory(""));
-
+    // spec = isDev
+    //     ? spec.copy(devDependencies: dependencies)
+    //     : spec.copy(dependencies: dependencies);
+    // await spec.save(Directory(""));
   }
 
   uninstall(List<String> packs, bool isDev) async {
     packs.removeAt(0);
     packs.removeWhere((t) => t == "--dev");
-     PubSpec spec = await getPubSpec();
+    PubSpec spec = await getPubSpec();
     var dependencies = isDev ? spec.devDependencies : spec.dependencies;
+    File yaml = File("pubspec.yaml");
+    var node = yaml.readAsLinesSync();
+    bool isAlter = false;
 
-    for(String pack in packs){
+    for (String pack in packs) {
+      if (!dependencies.containsKey(pack)) {
+        print("Package não está instalado");
+        continue;
+      }
+      isAlter = true;
+      node.removeWhere((t) => t.contains("  $pack:"));
 
-   
-
-    if (!dependencies.containsKey(pack)) {
-      print("Package não está instalado");
-      continue;
+      print("Remove $pack from pubspec");
     }
-    dependencies.remove(pack);
-    
-    print("Remove $pack from pubspec");
-  }
 
-  spec = isDev
-        ? spec.copy(devDependencies: dependencies)
-        : spec.copy(dependencies: dependencies);
-    await spec.save(Directory(""));
+    if (isAlter) {
+      yaml.writeAsStringSync(node.join("\n"));
+    }
+
+    // spec = isDev
+    //     ? spec.copy(devDependencies: dependencies)
+    //     : spec.copy(dependencies: dependencies);
+
+    // await spec.save(Directory(""));
   }
 }
