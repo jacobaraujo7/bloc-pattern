@@ -16,7 +16,7 @@ class BlocProvider extends StatefulWidget {
     //  this.views,
     this.tagText = "global",
   }) : super(key: key) {
-    if(!_injectMap.containsKey(tagText)) {
+    if (!_injectMap.containsKey(tagText)) {
       _injectMap[tagText] = Core(
         blocs: this.blocs,
         dependencies: this.dependencies,
@@ -66,9 +66,8 @@ class BlocProvider extends StatefulWidget {
 }
 
 class _BlocProviderListState extends State<BlocProvider> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     print("BLOCPROVIDER START (${widget.tagText})");
   }

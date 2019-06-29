@@ -5,7 +5,8 @@ class Consumer<T extends BlocBase> extends StatefulWidget {
   final Widget Function(BuildContext context, T value) builder;
   final String tag;
 
-  Consumer({Key key, @required this.builder, this.tag = "global"}) : super(key: key);
+  Consumer({Key key, @required this.builder, this.tag = "global"})
+      : super(key: key);
 
   @override
   _ConsumerState<T> createState() => _ConsumerState<T>();

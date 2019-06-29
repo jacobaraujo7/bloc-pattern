@@ -328,14 +328,17 @@ When using the Module Widget you do not have to worry about using tags, to acces
 ``` dart 
   //use
   HomeModule.to.bloc<HomeBloc>();
-
   //instead
   BlocProvider.tag("HomeModule").bloc<HomeBloc>();
   
-}
+  //using the Consumer pattern with widget ConsumerModule
+  ConsumerModule<HomeBloc, HomeModule>(
+    builder: (context, value){
+      ...
+    }
+  ); 
+
 ```
-
-
 
 # Dispose
 

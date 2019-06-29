@@ -1,3 +1,6 @@
+## 2.2.2+3 (Jun 28, 2019)
+- Add ConsumerModule
+
 ## 2.2.1 (Jun 22, 2019)
 - Prepare to Slidy
 - Fix error inject module.

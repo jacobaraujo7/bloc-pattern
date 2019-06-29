@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 
 abstract class ModuleWidget extends StatelessWidget {
-
   List<Bloc> get blocs;
   List<Dependency> get dependencies;
   Widget get view;
@@ -15,7 +14,7 @@ abstract class ModuleWidget extends StatelessWidget {
       tagText: this.runtimeType.toString(),
       blocs: blocs,
       dependencies: dependencies,
-      child: view,);
+      child: view,
+    );
   }
-
 }
