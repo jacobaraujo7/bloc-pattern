@@ -19,11 +19,11 @@ class Inject<T> {
     return get<T>(params);
   }
 
-  disposeBloc<T extends BlocBase>([String tag]) {
+  disposeBloc<T extends BlocBase>() {
     return BlocProvider.disposeBloc<T>(tag);
   }
 
-  disposeDependency<T>([String tag]) {
+  disposeDependency<T>() {
     return BlocProvider.disposeDependency<T>(tag);
   }
 

@@ -1,3 +1,6 @@
+## 2.2.3 (Jul 11, 2019)
+- Fix error dispose unique bloc
+
 ## 2.2.2+3 (Jun 28, 2019)
 - Add ConsumerModule
 
