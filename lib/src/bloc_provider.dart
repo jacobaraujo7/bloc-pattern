@@ -77,7 +77,7 @@ class _BlocProviderListState extends State<BlocProvider> {
     Core core = _injectMap[widget.tagText];
     core?.dispose();
     _injectMap.remove(widget.tagText);
-    print(" --- DIPOSE BLOC PROVIDER---- (${widget.tagText})");
+    print(" --- DISPOSE BLOC PROVIDER---- (${widget.tagText})");
     super.dispose();
   }
 
