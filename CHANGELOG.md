@@ -1,3 +1,23 @@
+## 2.2.3 (Jul 11, 2019)
+- Fix error dispose unique bloc
+
+## 2.2.2+3 (Jun 28, 2019)
+- Add ConsumerModule
+
+## 2.2.1 (Jun 22, 2019)
+- Prepare to Slidy
+- Fix error inject module.
+
+## 2.2.0+5 (Jun 21, 2019)
+- Fix error consumer module.
+
+## 2.2.0+4 (Jun 19, 2019)
+- Fix error dispose bloc.
+
+## 2.2.0+1 (Jun 14, 2019)
+- Introduced project modules.
+- Tag for each BlocProvider. You can use multiple BlocProvider independently.
+
 ## 2.1.9+2
 - Fix dispose error
 

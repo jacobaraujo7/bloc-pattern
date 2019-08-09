@@ -4,40 +4,53 @@ import 'package:exampleinjector/increment/decrement-controller.dart';
 import 'package:exampleinjector/increment/increment-controller.dart';
 import 'package:flutter_web/material.dart';
 
+// class ThirdModule extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       tagText: "third",
+//       child: ThirdWidget(),
+//       blocs: [
+//         Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"David"}))),
+//         Bloc((i) => DecrementController())
+//       ],
+//       dependencies: [
+//         Dependency((i) => GeneralApi(i.params['name'])),
+//       ],
+//     );
+//   }
+// }
 
-class ThirdModule extends StatelessWidget {
+class ThirdModule extends ModuleWidget {
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      tagText: "third",
-      child: ThirdWidget(),
-      blocs: [
-        Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"David"}))),
+  List<Bloc<BlocBase>> get blocs => [
+        Bloc((i) => IncrementController(i.get<GeneralApi>({"name": "David"}))),
         Bloc((i) => DecrementController())
-      ],
-      dependencies: [
-        Dependency((i) => GeneralApi(i.params['name'])),
-      ],
-    );
-  }
-} 
+      ];
 
+  @override
+  List<Dependency> get dependencies => [
+        Dependency((i) => GeneralApi(i.params['name'])),
+      ];
+
+  @override
+  Widget get view => ThirdWidget();
+
+  static Inject get to => Inject<ThirdModule>.of();
+
+}
 
 class ThirdWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final IncrementController bloc = ThirdModule.to.getBloc<IncrementController>();
 
-    final IncrementController bloc =
-        BlocProvider.tag("third").getBloc<IncrementController>();
-    
     final DecrementController blocDec =
-        BlocProvider.tag("third").getBloc<DecrementController>();
-
+        ThirdModule.to.getBloc<DecrementController>();
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Bloc"),
-
       ),
       body: Center(
         child: Column(

@@ -8,3 +8,5 @@ export 'src/bloc_provider.dart';
 export 'src/inject.dart';
 export 'src/disposable.dart';
 export 'src/consumer.dart';
+export 'src/module.dart';
+export 'src/consumer_module.dart';

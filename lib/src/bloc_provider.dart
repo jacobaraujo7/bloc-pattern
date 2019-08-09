@@ -16,10 +16,11 @@ class BlocProvider extends StatefulWidget {
     //  this.views,
     this.tagText = "global",
   }) : super(key: key) {
-    if (!_injectMap.containsKey(tag)) {
+    if (!_injectMap.containsKey(tagText)) {
       _injectMap[tagText] = Core(
         blocs: this.blocs,
         dependencies: this.dependencies,
+        tag: this.tagText,
         //  views: this.views,
       );
     }
@@ -54,23 +55,29 @@ class BlocProvider extends StatefulWidget {
   ///Discards BLoC from application memory
   static void disposeBloc<T extends BlocBase>([String tagText = "global"]) {
     Core core = _injectMap[tagText];
-    core.removeBloc<T>();
+    core?.removeBloc<T>();
   }
 
   ///Discards Dependency from application memory
   static void disposeDependency<T>([String tagText = "global"]) {
     Core core = _injectMap[tagText];
-    core.removeDependency<T>();
+    core?.removeDependency<T>();
   }
 }
 
 class _BlocProviderListState extends State<BlocProvider> {
   @override
+  void initState() {
+    super.initState();
+    print("BLOCPROVIDER START (${widget.tagText})");
+  }
+
+  @override
   void dispose() {
     Core core = _injectMap[widget.tagText];
-    core.dispose();
+    core?.dispose();
     _injectMap.remove(widget.tagText);
-
+    print(" --- DISPOSE BLOC PROVIDER---- (${widget.tagText})");
     super.dispose();
   }
 

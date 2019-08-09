@@ -269,6 +269,77 @@ For injection, use:
 
 ```
 
+# Tag Module
+
+Now you can create other BlocProvider's independently. To do this use the "tag" property giving a name for your new BlocProvider segment.
+
+``` dart
+
+...
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      //tag module
+      tag: "newModule",
+  ...
+
+```
+From here you can call your blocks and dependency registered in your new module using:
+
+``` dart
+    BlocProvider.tag("newModule").getBloc<BlocController>();
+```
+
+When you exit your tree of widget elements your BlocProvider will call the dispose () of that module only.X
+
+## ModuleWidget
+
+ModuleWidget uses the Tag Module implicitly, automating module creation for dependency injection. Basically creates a BlocProvider and the module tag is the name of the class itself.
+With this we can use the ModuleWidget instead of an instance of a StatelessWidget with the Widget of the BlocProvider using tag.
+
+``` dart 
+class HomeModule extends ModuleWidget {
+
+  //Inject the blocs
+  @override
+  List<Bloc<BlocBase>> get blocs => [
+        Bloc((i) => IncrementController())),
+        Bloc((i) => DecrementController())
+      ];
+
+  //Inject the dependencies
+  @override
+  List<Dependency> get dependencies => [
+        Dependency((i) => GeneralApi(i.params['name'])),
+      ];
+
+  //main widget
+  @override
+  Widget get view => HomeWidget();
+
+  //shortcut to pick up dependency injections from this module
+  static Inject get to => Inject<HomeModule>.of();
+
+}
+```
+
+When using the Module Widget you do not have to worry about using tags, to access the module just use:
+
+``` dart 
+  //use
+  HomeModule.to.bloc<HomeBloc>();
+  //instead
+  BlocProvider.tag("HomeModule").bloc<HomeBloc>();
+  
+  //using the Consumer pattern with widget ConsumerModule
+  ConsumerModule<HomeBloc, HomeModule>(
+    builder: (context, value){
+      ...
+    }
+  ); 
+
+```
+
 # Dispose
 
 The data is automatically discarded when the application finishes, however if you want to do this manually or restart some injected singleton, use:
@@ -279,6 +350,14 @@ BlocProvider.disposeBloc<BlocController>();
 
 //dispose dependency
 BlocProvider.disposeDependency<GeneralApi>();
+
+
+//dispose BLoC in Module
+BlocProvider.tag("HomeModule").disposeBloc<BlocController>();
+
+//dispose BLoC in ModuleWidget
+HomeModule.to.disposeBloc<BlocController>();
+
 
 ```
 
