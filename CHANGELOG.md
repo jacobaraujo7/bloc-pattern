@@ -1,4 +1,4 @@
-## 2.2.3 (Aug 23, 2019)
+## 2.3.0 (Aug 23, 2019)
 - Mapped Errors in Custom Exception
 
 ## 2.2.3 (Jul 11, 2019)
