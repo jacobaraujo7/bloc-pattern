@@ -9,4 +9,5 @@ export 'src/inject.dart';
 export 'src/disposable.dart';
 export 'src/consumer.dart';
 export 'src/module.dart';
+export 'src/bloc_provider_error.dart';
 export 'src/consumer_module.dart';

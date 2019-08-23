@@ -38,8 +38,15 @@ class BlocProvider extends StatefulWidget {
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
   static T getBloc<T extends BlocBase>(
       [Map<String, dynamic> params, String tag = "global"]) {
-    Core core = _injectMap[tag];
-    return core.bloc<T>(params);
+    try {
+      Core core = _injectMap[tag];
+      return core.bloc<T>(params);
+    } on BlocProviderException {
+      rethrow;
+    } catch (e) {
+      throw BlocProviderException(
+          "${T.toString()} is not part of '$tag'. Check Injected BLoC's");
+    }
   }
 
   ///tag inject of BLocs, Dependency and Views.
@@ -48,20 +55,31 @@ class BlocProvider extends StatefulWidget {
   ///Use to inject a Dependency. If the Dependency is not instantiated, it starts a new instance. If it is marked as a singleton, the instance persists until the end of the application, or until the [disposeDependency];
   static T getDependency<T>(
       [Map<String, dynamic> params, String tag = "global"]) {
-    Core core = _injectMap[tag];
-    return core.dependency<T>(params);
+    try {
+      Core core = _injectMap[tag];
+      return core.dependency<T>(params);
+    } on BlocProviderException {
+      rethrow;
+    } catch (e) {
+      throw BlocProviderException(
+          "${T.toString()} is not part of '$tag'. Check Injected Dependencies");
+    }
   }
 
   ///Discards BLoC from application memory
   static void disposeBloc<T extends BlocBase>([String tagText = "global"]) {
-    Core core = _injectMap[tagText];
-    core?.removeBloc<T>();
+    if (_injectMap.containsKey(tagText)) {
+      Core core = _injectMap[tagText];
+      core?.removeBloc<T>();
+    }
   }
 
   ///Discards Dependency from application memory
   static void disposeDependency<T>([String tagText = "global"]) {
-    Core core = _injectMap[tagText];
-    core?.removeDependency<T>();
+    if (_injectMap.containsKey(tagText)) {
+      Core core = _injectMap[tagText];
+      core?.removeDependency<T>();
+    }
   }
 }
 
