@@ -1,5 +1,11 @@
+## 2.3.3 (Sep 26, 2019)
+- Fix error in segments bloc
+
 ## 2.3.2 (Sep 13, 2019)
 - Fix multiple tags error
+
+## 2.3.1 (Aug 24, 2019)
+- Mapped Errors in Custom Exception
 
 ## 2.3.0 (Aug 23, 2019)
 - Mapped Errors in Custom Exception

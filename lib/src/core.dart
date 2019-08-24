@@ -2,6 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 
 class Core {
+  DateTime createdAt = DateTime.now();
   final Map<String, BlocBase> _injectMapBloc = {};
   final Map<String, dynamic> _injectMapDependency = {};
   final Map<String, Widget> _injectMapView = {};

@@ -25,12 +25,16 @@ class BlocProvider extends StatefulWidget {
         //  views: this.views,
       );
     } else {
-      _injectMapHelper[tagText] = Core(
-        blocs: this.blocs,
-        dependencies: this.dependencies,
-        tag: this.tagText,
-        //  views: this.views,
-      );
+      Core current = _injectMap[tagText];
+      Duration timeDiff =  DateTime.now().difference(current.createdAt);
+      if (timeDiff.inSeconds < 1) {
+        _injectMapHelper[tagText] = Core(
+          blocs: this.blocs,
+          dependencies: this.dependencies,
+          tag: this.tagText,
+          //  views: this.views,
+        );
+      }
     }
   }
 
@@ -57,7 +61,7 @@ class BlocProvider extends StatefulWidget {
     } on NoSuchMethodError {
        rethrow;
     } catch (e) {
-      if (e.message == "No element") {
+      if (e?.message == "No element") {
         throw BlocProviderException(
             "${T.toString()} is not part of '$tag'. Check Injected BLoC's");
       } else {
@@ -77,8 +81,10 @@ class BlocProvider extends StatefulWidget {
       return core.dependency<T>(params);
     } on BlocProviderException {
       rethrow;
+    } on NoSuchMethodError {
+       rethrow;
     } catch (e) {
-      if (e.message == "No element") {
+      if (e?.message == "No element") {
         throw BlocProviderException(
             "${T.toString()} is not part of '$tag'. Check Injected Dependencies");
       } else {
