@@ -65,8 +65,12 @@ class BlocProvider extends StatefulWidget {
     } on BlocProviderException {
       rethrow;
     } catch (e) {
-      throw BlocProviderException(
-          "${T.toString()} is not part of '$tag'. Check Injected Dependencies");
+      if (e.message == "No element") {
+        throw BlocProviderException(
+            "${T.toString()} is not part of '$tag'. Check Injected Dependencies");
+      } else {
+        throw e;
+      }
     }
   }
 
