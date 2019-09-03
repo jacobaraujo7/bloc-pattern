@@ -271,7 +271,7 @@ For injection, use:
 
 # Tag Module
 
-Now you can create other BlocProvider's independently. To do this use the "tag" property giving a name for your new BlocProvider segment.
+Now you can create other BlocProvider's independently. To do this use the "tagText" property giving a name for your new BlocProvider segment. You need use Tag Module to work with multiples provides through the aplication. If you need instatiate another BlocProvider, you will need tag itself, otherwise you will get an error.
 
 ``` dart
 
@@ -280,7 +280,7 @@ Now you can create other BlocProvider's independently. To do this use the "tag" 
   Widget build(BuildContext context) {
     return BlocProvider(
       //tag module
-      tag: "newModule",
+      tagText: "newModule",
   ...
 
 ```
