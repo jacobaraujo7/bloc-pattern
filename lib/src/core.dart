@@ -1,68 +1,54 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:bloc_pattern/src/injectable.dart';
 import 'package:flutter/material.dart';
 
 class Core {
-  final Map<String, BlocBase> _injectMapBloc = {};
-  final Map<String, dynamic> _injectMapDependency = {};
+  final Map<String, dynamic> _injectMap = {};
   final Map<String, Widget> _injectMapView = {};
 
-  final List<Bloc> blocs;
-  final List<Dependency> dependencies;
+  final List<Injectable> injectables;
   final List<Widget> views;
+
   final String tag;
+  Core({this.injectables, this.tag, this.views});
 
-  Core({this.blocs, this.dependencies, this.views, this.tag});
+  T getInjectable<T>([Map<String, dynamic> params]) {
+    String type = _typeOf<T>();
+    T dependency;
 
-  BlocBase bloc<T extends BlocBase>([Map<String, dynamic> params]) {
-    String typeBloc = T.toString();
-    T blocBase;
-    if (_injectMapBloc.containsKey(typeBloc)) {
-      blocBase = _injectMapBloc[typeBloc];
+    if (exist(type)) {
+      dependency = _injectMap[type];
     } else {
-      Bloc b = blocs.firstWhere((b) => b.inject is T Function(Inject));
-      blocBase = b.inject(Inject(params: params, tag: tag));
-      if (b.singleton) {
-        _injectMapBloc[typeBloc] = blocBase;
+      Injectable injectable =
+          injectables.firstWhere((b) => b.inject is T Function(Inject));
+
+      dependency = injectable.inject(Inject(params: params, tag: tag));
+
+      if (injectable.singleton) {
+        _injectMap[type] = dependency;
       }
     }
-    return blocBase;
+    return dependency;
   }
 
-  removeBloc<T>() {
-    String type = T.toString();
-    if (_injectMapBloc.containsKey(type)) {
-      try {
-        _injectMapBloc[type].dispose();
-      } catch (e) {
-        print(e);
-      }
-      _injectMapBloc.remove(type);
-    }
+  String _typeOf<T>() => T.toString();
+
+  bool exist(String type) {
+    return _injectMap.containsKey(type);
   }
 
-  removeDependency<T>() {
-    String type = T.toString();
-    if (_injectMapDependency.containsKey(type)) {
-      if (_injectMapDependency[type] is Disposable)
-        _injectMapDependency[type].dispose();
-      _injectMapDependency.remove(type);
-    }
+  void _removeByStringType(String existenType) {
+    var dependency = _injectMap[existenType];
+    if (dependency is Disposable) dependency.dispose();
+    _injectMap.remove(existenType);
   }
 
-  dependency<T>([Map<String, dynamic> params]) {
-    String typeBloc = T.toString();
-    T dep;
-    if (_injectMapDependency.containsKey(typeBloc)) {
-      dep = _injectMapDependency[typeBloc];
-    } else {
-      Dependency d =
-          dependencies.firstWhere((dep) => dep.inject is T Function(Inject));
-      dep = d.inject(Inject(params: params, tag: tag));
-      if (d.singleton) {
-        _injectMapDependency[typeBloc] = dep;
-      }
+  void remove<T>() {
+    String type = _typeOf<T>();
+
+    if (exist(type)) {
+      _removeByStringType(type);
     }
-    return dep;
   }
 
   Widget view(String key) {
@@ -70,17 +56,8 @@ class Core {
     return _injectMapView[key];
   }
 
-  dispose() {
-    for (String key in _injectMapBloc.keys) {
-      BlocBase bloc = _injectMapBloc[key];
-      bloc.dispose();
-    }
-    _injectMapBloc.clear();
-
-    for (String key in _injectMapDependency.keys) {
-      var dependency = _injectMapDependency[key];
-      if (dependency is Disposable) dependency.dispose();
-    }
-    _injectMapDependency.clear();
+  void dispose() {
+    _injectMap.forEach((key, _) => _removeByStringType(key));
+    _injectMap.clear();
   }
 }

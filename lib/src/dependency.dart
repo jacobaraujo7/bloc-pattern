@@ -1,8 +1,7 @@
 import 'package:bloc_pattern/src/inject.dart';
+import 'package:bloc_pattern/src/injectable.dart';
 
-class Dependency<T> {
-  final T Function(Inject i) inject;
-  final bool singleton;
-
-  Dependency(this.inject, {this.singleton = true});
+class Dependency<T> extends Injectable<T> {
+  Dependency(T Function(Inject i) inject, {bool singleton = true})
+      : super(inject, singleton: singleton);
 }

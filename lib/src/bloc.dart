@@ -1,9 +1,8 @@
 import 'package:bloc_pattern/src/bloc_base.dart';
 import 'package:bloc_pattern/src/inject.dart';
+import 'package:bloc_pattern/src/injectable.dart';
 
-class Bloc<T extends BlocBase> {
-  final T Function(Inject i) inject;
-  final bool singleton;
-
-  Bloc(this.inject, {this.singleton = true});
+class Bloc<T extends BlocBase> extends Injectable<T> {
+  Bloc(T Function(Inject i) inject, {bool singleton = true})
+      : super(inject, singleton: singleton);
 }
