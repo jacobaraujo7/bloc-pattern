@@ -21,12 +21,14 @@ class BlocProvider extends StatefulWidget {
   })  : injectables = List<Injectable>(),
         super(key: key) {
     if (!_injectMap.containsKey(tagText)) {
-      injectables.addAll(blocs);
-      injectables.addAll(dependencies);
+      if (blocs != null) injectables.addAll(blocs);
+      if (dependencies != null) injectables.addAll(dependencies);
 
-      _injectMap[tagText] = Core(injectables: injectables, tag: tagText
-          //  views: this.views,
-          );
+      _injectMap[tagText] = Core(
+        injectables: injectables, 
+        tag: tagText
+        //  views: this.views,
+      );
     }
   }
 

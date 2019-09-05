@@ -16,7 +16,9 @@ class Core {
     String type = _typeOf<T>();
     T dependency;
 
-    if (exist(type)) {
+    _verifyType<T>();
+
+    if (constainsType(type)) {
       dependency = _injectMap[type];
     } else {
       Injectable injectable =
@@ -33,7 +35,7 @@ class Core {
 
   String _typeOf<T>() => T.toString();
 
-  bool exist(String type) {
+  bool constainsType(String type) {
     return _injectMap.containsKey(type);
   }
 
@@ -46,8 +48,14 @@ class Core {
   void remove<T>() {
     String type = _typeOf<T>();
 
-    if (exist(type)) {
+    if (constainsType(type)) {
       _removeByStringType(type);
+    }
+  }
+
+  void _verifyType<T>() {
+    if (_typeOf<T>() == _typeOf<dynamic>()) {
+      throw new BlocProviderException("dynamic not is a valid type");
     }
   }
 
