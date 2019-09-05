@@ -39,17 +39,17 @@ class Core {
     return _injectMap.containsKey(type);
   }
 
-  void _removeByStringType(String existenType) {
-    var dependency = _injectMap[existenType];
-    if (dependency is Disposable) dependency.dispose();
-    _injectMap.remove(existenType);
+  void _disposeInjectable(String type) {
+    var injectable = _injectMap[type];
+    if (injectable is Disposable) injectable.dispose();
   }
 
   void remove<T>() {
     String type = _typeOf<T>();
 
     if (constainsType(type)) {
-      _removeByStringType(type);
+      _disposeInjectable(type);
+      _injectMap.remove(type);
     }
   }
 
@@ -65,7 +65,7 @@ class Core {
   }
 
   void dispose() {
-    _injectMap.forEach((key, _) => _removeByStringType(key));
+    _injectMap.forEach((key, _) => _disposeInjectable(key));
     _injectMap.clear();
   }
 }
