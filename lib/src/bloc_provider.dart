@@ -1,6 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:bloc_pattern/src/bloc.dart';
 import 'package:bloc_pattern/src/bloc_base.dart';
+import 'package:bloc_pattern/src/exception/bloc_provider_exception.dart';
+import 'package:bloc_pattern/src/exception/no_element_found_exception.dart';
 import 'package:bloc_pattern/src/injectable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,6 @@ class BlocProvider extends StatefulWidget {
   _BlocProviderListState createState() => _BlocProviderListState();
 
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
-
   static T getBloc<T extends BlocBase>(
       [Map<String, dynamic> params, String tag = "global"]) {
     return _getInjectable<T>(params, tag);
@@ -61,8 +62,7 @@ class BlocProvider extends StatefulWidget {
       rethrow;
     } catch (e) {
       if (e.message == "No element") {
-        throw BlocProviderException(
-            "${T.toString()} is not part of '$tag'. Check Injected BLoC's and Dependencies");
+        throw new NoElementFoundException(T.toString(), tag);
       } else {
         throw e;
       }
