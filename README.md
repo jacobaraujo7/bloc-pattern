@@ -101,7 +101,7 @@ Or consume directly on the Target widget using Consumer<T>().
 ```
 
 In this way, every time the ValueBloc onChangeValue method, the widgets inside the consumer will have new data.
-acesse o projeto completo [`clicando aqui`](https://github.com/jacobaraujo7/slider_bloc).
+Access the complete project [`clicking here`](https://github.com/jacobaraujo7/slider_bloc).
 
 
 # Using Streams and Reactive Programming (Rx)
@@ -394,6 +394,6 @@ class GeneralApi extends Disposable {
 
 THAT´S ALL
 
-## Para mais informações
+## For more information
 
-Acesse o Blog do Flutterando Clicando [aqui](https://flutterando.com.br).
+Access the Flutterando Blog [Clicking here](https://flutterando.com.br).
