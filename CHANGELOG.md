@@ -1,4 +1,4 @@
-## 2.3.1 (Sep 13, 2019)
+## 2.3.2 (Sep 13, 2019)
 - Fix multiple tags error
 
 ## 2.3.0 (Aug 23, 2019)
