@@ -54,6 +54,8 @@ class BlocProvider extends StatefulWidget {
       return core.bloc<T>(params);
     } on BlocProviderException {
       rethrow;
+    } on NoSuchMethodError {
+       rethrow;
     } catch (e) {
       if (e.message == "No element") {
         throw BlocProviderException(
