@@ -1,3 +1,7 @@
+## 2.3.4 (Out 03, 2019)
+- Fix error singleton blocs module
+- Added debugMode false to print texts
+
 ## 2.3.3 (Sep 26, 2019)
 - Fix error in segments bloc
 

@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart'
 import 'dart:io' show Platform;
 
 void main() {
+
   _setTargetPlatformForDesktop();
   runApp(MyApp());
 }
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         home: IncrementWidget(),
       ),
       blocs: [
-        Bloc((i) => IncrementController(i.get<GeneralApi>({"name":"John"}))),
+        Bloc((i) => IncrementController(i.get<GeneralApi>({"name": "John"}))),
         Bloc((i) => DecrementController())
       ],
       dependencies: [
@@ -45,4 +46,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

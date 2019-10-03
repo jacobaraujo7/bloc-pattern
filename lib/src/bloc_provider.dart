@@ -16,27 +16,7 @@ class BlocProvider extends StatefulWidget {
     this.dependencies,
     //  this.views,
     this.tagText = "global",
-  }) : super(key: key) {
-    if (!_injectMap.containsKey(tagText)) {
-      _injectMap[tagText] = Core(
-        blocs: this.blocs,
-        dependencies: this.dependencies,
-        tag: this.tagText,
-        //  views: this.views,
-      );
-    } else {
-      Core current = _injectMap[tagText];
-      Duration timeDiff =  DateTime.now().difference(current.createdAt);
-      if (timeDiff.inSeconds < 1) {
-        _injectMapHelper[tagText] = Core(
-          blocs: this.blocs,
-          dependencies: this.dependencies,
-          tag: this.tagText,
-          //  views: this.views,
-        );
-      }
-    }
-  }
+  }) : super(key: key);
 
   final List<Bloc> blocs;
   final List<Dependency> dependencies;
@@ -46,6 +26,8 @@ class BlocProvider extends StatefulWidget {
 
   @override
   _BlocProviderListState createState() => _BlocProviderListState();
+
+  static bool debugMode = true;
 
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
   static T getBloc<T extends BlocBase>(
@@ -59,7 +41,7 @@ class BlocProvider extends StatefulWidget {
     } on BlocProviderException {
       rethrow;
     } on NoSuchMethodError {
-       rethrow;
+      rethrow;
     } catch (e) {
       if (e?.message == "No element") {
         throw BlocProviderException(
@@ -82,7 +64,7 @@ class BlocProvider extends StatefulWidget {
     } on BlocProviderException {
       rethrow;
     } on NoSuchMethodError {
-       rethrow;
+      rethrow;
     } catch (e) {
       if (e?.message == "No element") {
         throw BlocProviderException(
@@ -114,7 +96,28 @@ class _BlocProviderListState extends State<BlocProvider> {
   @override
   void initState() {
     super.initState();
-    print("BLOCPROVIDER START (${widget.tagText})");
+
+    if (!_injectMap.containsKey(widget.tagText)) {
+      if (BlocProvider.debugMode) {
+        print("BLOCPROVIDER START (${widget.tagText})");
+      }
+      _injectMap[widget.tagText] = Core(
+        blocs: widget.blocs,
+        dependencies: widget.dependencies,
+        tag: widget.tagText,
+        //  views: this.views,
+      );
+    } else {
+      if (BlocProvider.debugMode) {
+        print("BLOCPROVIDER START AGAIN (${widget.tagText})");
+      }
+      _injectMapHelper[widget.tagText] = Core(
+        blocs: widget.blocs,
+        dependencies: widget.dependencies,
+        tag: widget.tagText,
+        //  views: this.views,
+      );
+    }
   }
 
   @override
@@ -124,10 +127,14 @@ class _BlocProviderListState extends State<BlocProvider> {
     if (_injectMapHelper.containsKey(widget.tagText)) {
       _injectMap[widget.tagText] = _injectMapHelper[widget.tagText];
       _injectMapHelper.remove(widget.tagText);
-      print(" --- DISPOSE BLOC ADDED ---- (${widget.tagText})");
+      if (BlocProvider.debugMode) {
+        print(" --- DISPOSE BLOC ADDED ---- (${widget.tagText})");
+      }
     } else {
       _injectMap.remove(widget.tagText);
-      print(" --- DISPOSE BLOC PROVIDER---- (${widget.tagText})");
+      if (BlocProvider.debugMode) {
+        print(" --- DISPOSE BLOC PROVIDER---- (${widget.tagText})");
+      }
     }
 
     super.dispose();
