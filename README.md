@@ -7,20 +7,6 @@ Tools to implement BLoC Pattern with Dependency Injection in your project
 
 Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
 
-## Install in Flutter Web
-
-
-Temporarily, the codes for flutter_web have been separated from the main package. But in the future they will be one.
-To use the bloc_pattern in flutter_web add in your pubspec:
-
-```
-dependencies:
-  bloc_pattern:
-    git:
-      url: https://github.com/jacobaraujo7/bloc-pattern.git
-      ref: web
-```
-
 # Using
 
 ## BLoC class
@@ -80,6 +66,7 @@ Or consume directly on the Target widget using Consumer<T>().
 ``` dart
     //Cosume your BLoC
   Consumer<ValueBloc>(
+    distinct: (oldValue, newValue) => oldValue.value != newValue.value,
     builder: (BuildContext context, ValueBloc valueBloc) {
       return _textValue(valueBloc.value);
     },
