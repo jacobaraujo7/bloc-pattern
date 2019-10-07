@@ -1,4 +1,4 @@
-## 2.4.0+1 (Out 06, 2019)
+## 2.4.0+2 (Out 06, 2019)
 - Added distinct parameter in Consumer Widget and condition to call builder.
    Consumer<HomeBloc>(
        distinct: (oldValue, newValue) => oldValue.variable != newValue.variable,

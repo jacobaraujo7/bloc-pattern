@@ -319,7 +319,7 @@ When using the Module Widget you do not have to worry about using tags, to acces
   BlocProvider.tag("HomeModule").bloc<HomeBloc>();
   
   //using the Consumer pattern with widget ConsumerModule
-  ConsumerModule<HomeBloc, HomeModule>(
+  ConsumerModule<HomeModule, HomeBloc>(
     builder: (context, value){
       ...
     }
