@@ -11,10 +11,8 @@ class IncrementWidget extends StatelessWidget {
 
     final IncrementController bloc =
         BlocProvider.getBloc<IncrementController>();
-    
     final DecrementController blocDec =
         BlocProvider.getBloc<DecrementController>();
-
 
     return Scaffold(
       appBar: AppBar(
@@ -50,10 +48,10 @@ class IncrementWidget extends StatelessWidget {
                 return Text("Tocou no botão add ${snapshot.data} vezes");
               },
             ),
-            StreamBuilder(
-              stream: blocDec.outCounter,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Text("Tocou no botão add ${snapshot.data} vezes");
+            Consumer<DecrementController>(
+              distinct: (oldValue, newValue) => newValue.counter != newValue.counter,
+              builder: (context, value) {
+                return Text("Tocou no botão add ${value.counter} vezes");
               },
             ),
           ],

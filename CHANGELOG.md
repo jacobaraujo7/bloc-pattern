@@ -1,3 +1,8 @@
+## 2.4.0 (Out 06, 2019)
+- Added distinct parameter in Consumer Widget
+- Added specific Consumer for Modules Pattern
+   ConsumerModule<HomeModule, HomeBloc>(...);
+
 ## 2.3.4 (Out 03, 2019)
 - Fix error singleton blocs module
 - Added debugMode false to print texts

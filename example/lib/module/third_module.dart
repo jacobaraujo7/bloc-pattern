@@ -62,10 +62,9 @@ class ThirdWidget extends StatelessWidget {
                 return Text("Tocou no botão add ${snapshot.data} vezes");
               },
             ),
-            StreamBuilder(
-              stream: blocDec.outCounter,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Text("Tocou no botão add ${snapshot.data} vezes");
+            ConsumerModule<ThirdModule, DecrementController>(
+              builder: (context, value) {
+                return Text("Tocou no botão add ${value.counter} vezes");
               },
             ),
           ],
