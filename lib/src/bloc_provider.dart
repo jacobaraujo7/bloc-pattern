@@ -36,7 +36,10 @@ class BlocProvider extends StatefulWidget {
       Core core = _injectMapHelper.containsKey(tag)
           ? _injectMapHelper[tag]
           : _injectMap[tag];
-
+      if (core == null) {
+        throw BlocProviderException(
+            "Module \"$tag\" is not in the widget tree");
+      }
       return core.bloc<T>(params);
     } on BlocProviderException {
       rethrow;
