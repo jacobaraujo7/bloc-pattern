@@ -1,52 +1,102 @@
 # Bloc Pattern
+
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6UTC2V72FL644&source=url)
 
-Tools to implement BLoC Pattern with Dependency Injection in your project  
+Package that helps you implementing BloC Pattern by Dependency Injection in your project.
 
-## Start
 
-Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml.
+## Package
 
-# Using
+[bloc_pattern](https://pub.dev/packages/bloc_pattern)
 
-## BLoC class
 
-Create the business logic class and extend to BlocBase
+## What is BloC?
+
+BLoC stands for Business Logic Components. The gist of BLoC is that everything in the app should be represented as stream of events: widgets submit events; other widgets will respond. BLoC sits in the middle, managing the conversation. It will be created separately from the view, isolating the logic of the code.
+
+## Why to use bloc_pattern?
+
+It's perfect to organize, and follow the best practices in your code, taking vantage of **Dependency Injection**. And it's the best package to use with [`slidy`](https://github.com/Flutterando/slidy) (created to structure your Flutter project).
+
+
+# How to implement?
+
+### First step.
+
+Add [`bloc_pattern`](https://pub.dartlang.org/packages/bloc_pattern) in your pubspec.yaml. 
+
+```yaml
+dependencies:
+
+  bloc_pattern: ^2.3.2
+
+```
+
+Or you can use [`slidy`](https://github.com/Flutterando/slidy) to add in your dependencies: 
+
+```
+slidy install bloc_pattern
+
+```
+
+## Starting to code
+
+## 1. 
+
+Create the BloC class of your module, and extends from **BlocBase**.
 
 ``` dart
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:rxdart/rxdart.dart';
 
-class ValueBloc extends BlocBase {
-  double value = 0.0;
+class CounterBloc extends BlocBase{
 
-  onChangeValue(double v) {
-    value = v;
-    notifyListeners();
+  Observable<int> counter; // observable (Stream)
+
+  CounterBloc() {
+    counter = Observable.merge([ //merges the both streams 
+      _increment,
+      _decrement,
+    ]).startWith(0) //starts with the value 0(the initial data)
+    .scan((acc, curr, i) => acc + curr, 0 /* inital value: 0 */) // scans the old(acc) and the current(curr) value, and sum them
+    .asBroadcastStream(); //turns the stream into a Broadcast straem(it can be listened to more than once)
   }
+
+  final _increment = new BehaviorSubject<int>(); //the BehaviorSubject gets the last value
+  final _decrement = new BehaviorSubject<int>();
+
+  void increment() => _increment.add(1); //method to increment
+  void decrement() => _decrement.add(-1);//method to decrement
+
+
+@override
+  void dispose() {// will be called automatically 
+    _increment.close();
+    _decrement.close();
+  }
+
 }
 ```
-Now add the BlocProvider widget before MaterialApp
 
+## 2.
+
+Now wrap your MaterialApp into a **BlocProvider**. Obs.: **BlocProvider** is the widget where you can Inject all the BloCs, and then recover them anywhere in your application.
 
 ``` dart
-void main() => runApp(MyApp());
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      //add yours BLoCs controlles
-      blocs: [
-        Bloc((i) => ValueBloc()),
+        blocs: [
+          Bloc((i) => CounterBloc()),
       ],
-      //your main widget 
-      child: MaterialApp(
+          child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: HomePage(),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
@@ -54,159 +104,76 @@ class MyApp extends StatelessWidget {
 ...
 ```
 
-You can search for a BLoC class anywhere in your application using:
+## Recovering the BloC class.
 
 ``` dart
-    //recovering your Bloc
-  final ValueBloc bloc = BlocProvider.getBloc<ValueBloc>();
+    //recovering your BloC
+  final bloc = BlocProvider.getBloc<CounterBloc>();
 ```
 
-Or consume directly on the Target widget using Consumer<T>().
+## Using StreamBuilder 
+
+The **StreamBuilder** widgets lets you change the UI reactively without needing to call setState()(that rebuilds the stateful widget);
 
 ``` dart
-    //Cosume your BLoC
-  Consumer<ValueBloc>(
-    distinct: (oldValue, newValue) => oldValue.value != newValue.value,
-    builder: (BuildContext context, ValueBloc valueBloc) {
-      return _textValue(valueBloc.value);
-    },
-  ),
-  Container(
-    height: 25,
-  ),
-  Consumer<ValueBloc>(
-    builder: (BuildContext context, ValueBloc valueBloc) {
-      return Slider(
-      activeColor: Colors.white,
-      inactiveColor: Colors.white,
-      min: 0.0,
-      max: 1.0,
-      onChanged: valueBloc.onChangeValue,
-      value: valueBloc.value);
-    },
-  ),
-```
-
-In this way, every time the ValueBloc onChangeValue method, the widgets inside the consumer will have new data.
-Access the complete project [`clicking here`](https://github.com/jacobaraujo7/slider_bloc).
-
-
-# Using Streams and Reactive Programming (Rx)
-
-You can also use the provider to get BlocClasses that work with streams for more complex processing using reactive programming.
-
-
-
-``` dart
-import 'dart:async';
-import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:rxdart/rxdart.dart';
-
-class BlocController extends BlocBase {
-
-BlocController();
-
-//Stream that receives a number and changes the count;
-var _counterController = BehaviorSubject<int>.seeded(0);
-//output
-Stream<int> get outCounter => _counterController.stream;
-//input
-Sink<int> get inCounter => _counterController.sink;
-
-increment(){
-    inCounter.add(_counterController.value+1);
-}
-
-//dispose will be called automatically by closing its streams
-@override
-void dispose() {
-  _counterController.close();
-  super.dispose();
-}
-
-}
-
-```
-
-Add the Provider in the main widget of your widget tree by passing as your BlocController parameter
-
-``` dart
-
-...
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      child: MaterialApp(
-        home: IncrementWidget(),
-      ),
-      blocs: [
-        //add yours BLoCs controlles
-        Bloc((i) => BlocController()),
-      ],
-    );
-  }
-}
-
-...
-
-```
-
-Now you can recover your Bloc anywhere in your widget tree with the help of `BlocProvider`
-
-``` dart
-
-@override
-  Widget build(BuildContext context) {
-    //recovering your Bloc
-  final BlocController bloc = BlocProvider.getBloc<BlocController>();
-
-  ....
-
-
-}
-
-```
-
-Now just use `StreamBuilder` to get your streams and change the UI without needing setState
-
-``` dart
-
 StreamBuilder(
-    stream: bloc.outCounter,
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-    return Text(
-        '${snapshot.data}',
-        style: Theme.of(context).textTheme.display1,
-    );
-    },
-),
+                stream: bloc.outCounter,  //here you call the flux of data(stream)
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  return Text(
+                    '${snapshot.data}',
+                    style: Theme.of(context).textTheme.display1,
+                  );
+                },
+              ),
+```
 
-  ....
+## Consuming the BloC directly from the Widget
 
-floatingActionButton: new FloatingActionButton(
-    onPressed: bloc.increment,
-    tooltip: 'Increment',
-    child: new Icon(Icons.add),
-), 
+You can consume your BloC directly from the target Widget using the **Consumer()** class. 
+ Everytime the CounterBloc adds a new value, the widgets within the **Consumer** will have new data.
+ You can see the project source code [`here`](https://github.com/LilySny/counter-using-bloc_pattern).
 
+### BloC using Consume(): 
+
+``` dart
+class CounterBloc {
+    ...
+int counter = 0;
+onChanged(){
+  counter++;
+  notifyListeners(); //notifies when occurs a change
+}
 
 }
 
+```
+
+``` dart
+ Consumer<CounterBloc>(
+            builder: (BuildContext context, CounterBloc bloc) {
+              return Text(bloc.counter.toString()); //calling the counter value
+          ),
+          SizedBox(
+            height: 25.0,
+          ),
+          Consumer<CounterBloc>(
+            builder: (BuildContext context, CounterBloc bloc) {
+              return 
+            RaisedButton(
+              onPressed: () {
+                bloc.onChanged(); //calling onChanged() that will increment the value
+              },
+              child: Icon(Icons.add),
+            );
+            },
+          ),
 ```
 
 # Dependency Injection
 
-Just like BLoC, you can also include in dependency injection other class. Ex: Services and Models
+You can also inject other dependencies aside BloC:
 
 ``` dart
-
-...
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -224,19 +191,24 @@ class MyApp extends StatelessWidget {
       ],
       //add Other Object to provider
       dependencies: [
-        Dependency((i) => GeneralApi(i.params['name'])),
+        Dependency((i) => GeneralApi(i.params['name'])), //repository
       ],
     );
   }
-}
+```
+You can define if the dependency will be a **Singleton** or not:
 
-...
+``` dart
+<<<<<<< HEAD
+Bloc((i) => CounterBloc(), singleton: true)
+=======
 
+Bloc((i) => CounterBloc(), singleton: true)
+
+>>>>>>> readme
 ```
 
-You can define whether this dependency will behave as a singleton or not. Default is false.
-
-For injection, use:
+To inject the dependency in your class use:
 
 ``` dart
 
@@ -244,9 +216,9 @@ For injection, use:
   Widget build(BuildContext context) {
    
     //recovering your API dependency
-  final GeneralApi api = BlocProvider.getDependency<GeneralApi>();
+  final GeneralApi api = BlocProvider.getDependency<GeneralApi>(); //repository
   
-  //Passing Data by Parameters
+  //Passing Data through parameters
   final UserModel user = BlocProvider.getDependency<UserModel>({
     "id": 1,
     "name": "João"
@@ -256,9 +228,12 @@ For injection, use:
 
 ```
 
-# Tag Module
+# Tags
 
-Now you can create other BlocProvider's independently. To do this use the "tagText" property giving a name for your new BlocProvider segment. You need use Tag Module to work with multiples provides through the aplication. If you need instatiate another BlocProvider, you will need tag itself, otherwise you will get an error.
+You can create new **BlocProviders** independently. 
+
+* Use the property "tagText" giving a name for your new **BlocProvider**.  
+* When you have more than one BlocProvider, you will need to use its tag to indentificate, otherwise it should return an error.
 
 ``` dart
 
@@ -271,18 +246,24 @@ Now you can create other BlocProvider's independently. To do this use the "tagTe
   ...
 
 ```
-From here you can call your blocks and dependency registered in your new module using:
+
+Calling the dependencies and BloCs from other classes:
 
 ``` dart
-    BlocProvider.tag("newModule").getBloc<BlocController>();
-```
 
-When you exit your tree of widget elements your BlocProvider will call the dispose () of that module only.X
+    BlocProvider.tag("newModule").getBloc<BlocController>();
+    ...
+
+```
 
 ## ModuleWidget
 
-ModuleWidget uses the Tag Module implicitly, automating module creation for dependency injection. Basically creates a BlocProvider and the module tag is the name of the class itself.
-With this we can use the ModuleWidget instead of an instance of a StatelessWidget with the Widget of the BlocProvider using tag.
+The **ModuleWidget** uses Tag Module in its structure: 
+
+* Implicity creates a **tag** for the module class.
+* Gets automatically the tag when you call the module BloC.
+
+> You can use [`Slidy`](https://github.com/Flutterando/slidy) to create the module
 
 ``` dart 
 class HomeModule extends ModuleWidget {
@@ -309,50 +290,23 @@ class HomeModule extends ModuleWidget {
 
 }
 ```
-
-When using the Module Widget you do not have to worry about using tags, to access the module just use:
+So instead of using BlocProvider and tags, you can just use **ModuleWidget**, it will also organize and modularize your project.
 
 ``` dart 
   //use
   HomeModule.to.bloc<HomeBloc>();
-  //instead
+  //instead of
   BlocProvider.tag("HomeModule").bloc<HomeBloc>();
-  
-  //using the Consumer pattern with widget ConsumerModule
-  ConsumerModule<HomeModule, HomeBloc>(
-    builder: (context, value){
-      ...
-    }
-  ); 
 
 ```
 
 # Dispose
 
-The data is automatically discarded when the application finishes, however if you want to do this manually or restart some injected singleton, use:
+**It's important to always call the dispose(), to make sure that the objects won't continue processing when you don't have any data.**
+
+The BlocBase already comes with Disposable, you just need to override it and will be called automatically in your ModuleWidget
 
 ``` dart
-//dispose BLoC
-BlocProvider.disposeBloc<BlocController>();
-
-//dispose dependency
-BlocProvider.disposeDependency<GeneralApi>();
-
-
-//dispose BLoC in Module
-BlocProvider.tag("HomeModule").disposeBloc<BlocController>();
-
-//dispose BLoC in ModuleWidget
-HomeModule.to.disposeBloc<BlocController>();
-
-
-```
-
-
-[Optional] Add the dispose to your Bloc so that it can be called automatically or manually.
-
-``` dart
-
 class YourBloc extends BlocBase {
 
   @override
@@ -364,12 +318,28 @@ class YourBloc extends BlocBase {
 
 ```
 
+To do this manually or restart some injected singleton, use:
 
-[Optional] Extend you Service or Repositore with Disposable for automatic dipose.
+``` dart
+//dispose BLoC
+BlocProvider.disposeBloc<BlocController>();
+
+//dispose dependency
+BlocProvider.disposeDependency<GeneralApi>();
+
+//dispose BLoC in Module
+BlocProvider.tag("HomeModule").disposeBloc<BlocController>();
+
+//dispose BLoC in ModuleWidget
+HomeModule.to.disposeBloc<BlocController>();
+
+```
+
+**[Optional]** Extends Disposable in your *service* or *repository* for automatic dispose.
 
 ``` dart
 
-class GeneralApi extends Disposable {
+class Repository extends Disposable {
 
   @override
   void dispose(){
@@ -379,8 +349,7 @@ class GeneralApi extends Disposable {
 
 ```
 
-THAT´S ALL
 
-## For more information
+### For more information
 
-Access the Flutterando Blog [Clicking here](https://flutterando.com.br).
+Access [Flutterando Blog](https://flutterando.com.br).
