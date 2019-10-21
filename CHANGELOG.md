@@ -1,3 +1,6 @@
+## 2.4.1+1 (Out 21, 2019)
+- Fix Module Not Found error
+
 ## 2.4.0+2 (Out 06, 2019)
 - Added distinct parameter in Consumer Widget and condition to call builder.
    Consumer<HomeBloc>(
