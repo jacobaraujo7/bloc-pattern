@@ -1,3 +1,6 @@
+## 2.4.2 (Out 25, 2019)
+- Added bloc_pattern_test from tests.
+
 ## 2.4.1+1 (Out 21, 2019)
 - Fix Module Not Found error
 

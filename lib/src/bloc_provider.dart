@@ -29,6 +29,8 @@ class BlocProvider extends StatefulWidget {
 
   static bool debugMode = true;
 
+  static bool isTest = false;
+
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
   static T getBloc<T extends BlocBase>(
       [Map<String, dynamic> params, String tag = "global"]) {
@@ -93,34 +95,38 @@ class BlocProvider extends StatefulWidget {
       core?.removeDependency<T>();
     }
   }
+
+  static void addCoreInit(
+      List<Bloc> blocs, List<Dependency> dependencies, String tagText) {
+    if (!_injectMap.containsKey(tagText)) {
+      if (BlocProvider.debugMode) {
+        print("BLOCPROVIDER START ($tagText)");
+      }
+      _injectMap[tagText] = Core(
+        blocs: blocs,
+        dependencies: dependencies,
+        tag: tagText,
+        //  views: this.views,
+      );
+    } else {
+      if (BlocProvider.debugMode) {
+        print("BLOCPROVIDER START AGAIN ($tagText)");
+      }
+      _injectMapHelper[tagText] = Core(
+        blocs: blocs,
+        dependencies: dependencies,
+        tag: tagText,
+        //  views: this.views,
+      );
+    }
+  }
 }
 
 class _BlocProviderListState extends State<BlocProvider> {
   @override
   void initState() {
     super.initState();
-
-    if (!_injectMap.containsKey(widget.tagText)) {
-      if (BlocProvider.debugMode) {
-        print("BLOCPROVIDER START (${widget.tagText})");
-      }
-      _injectMap[widget.tagText] = Core(
-        blocs: widget.blocs,
-        dependencies: widget.dependencies,
-        tag: widget.tagText,
-        //  views: this.views,
-      );
-    } else {
-      if (BlocProvider.debugMode) {
-        print("BLOCPROVIDER START AGAIN (${widget.tagText})");
-      }
-      _injectMapHelper[widget.tagText] = Core(
-        blocs: widget.blocs,
-        dependencies: widget.dependencies,
-        tag: widget.tagText,
-        //  views: this.views,
-      );
-    }
+    BlocProvider.addCoreInit(widget.blocs, widget.dependencies, widget.tagText);
   }
 
   @override

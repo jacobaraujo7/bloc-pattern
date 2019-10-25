@@ -199,13 +199,7 @@ class MyApp extends StatelessWidget {
 You can define if the dependency will be a **Singleton** or not:
 
 ``` dart
-<<<<<<< HEAD
-Bloc((i) => CounterBloc(), singleton: true)
-=======
-
-Bloc((i) => CounterBloc(), singleton: true)
-
->>>>>>> readme
+Bloc((i) => CounterBloc(), singleton: false)
 ```
 
 To inject the dependency in your class use:
@@ -349,6 +343,37 @@ class Repository extends Disposable {
 
 ```
 
+# Tests
+
+You can start your modules in the test environment and use dependency injections directly.
+
+``` dart
+...
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  //start Module and Dependency Injection
+  initModule(AppModule());
+  AppBloc bloc;
+
+  setUp(() {
+    //get bloc
+    bloc = AppModule.to.bloc<AppBloc>();
+  });
+
+  group('AppBloc Test', () {
+    test("Counter Test", () {
+      expect(bloc.counter, 1);
+    });
+    test("Class Test", () {
+      expect(bloc, isInstanceOf<AppBloc>());
+    });
+  });
+}
+
+```
+
+You can create your mocks based on the "BlocProvider.isTest" static property, which returns a boolean.
 
 ### For more information
 
