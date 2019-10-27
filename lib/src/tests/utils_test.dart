@@ -5,6 +5,7 @@ import '../bloc_provider.dart';
 
 void initModule(ModuleWidget module) {
   BlocProvider.isTest = true;
+  BlocProvider.debugMode = false;
   var key = module.runtimeType.toString();
   var blocs = module.blocs;
   var dependencies = module.dependencies;
