@@ -1,6 +1,6 @@
 name: bloc_pattern
 description: Just a package with bases to deploy the BloC your code. Modules, Consumers And BLoC!
-version: 2.4.2+1
+version: 2.4.4
 author: Jacob Moura <jacobaraujo7@gmail.com>
 homepage: https://github.com/jacobaraujo7/bloc-pattern
 

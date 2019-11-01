@@ -373,6 +373,23 @@ void main() {
 
 ```
 
+You can also override injection elements in initModule. Use this to replace your client with a Mock.
+
+``` dart
+import 'package:flutter_test/flutter_test.dart';
+
+class MockClient extends Mock implements Dio {}
+
+void main() {
+  //start Module and Dependency Injection
+  initModule(AppModule(), changeDependencies: [
+      Dependency((i) => MockClient() as Dio),
+  ]);
+}
+
+```
+
+
 You can create your mocks based on the "BlocProvider.isTest" static property, which returns a boolean.
 
 ### For more information
