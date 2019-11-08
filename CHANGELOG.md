@@ -1,3 +1,6 @@
+## 2.5.0 (Nov 08, 2019)
+- Added generic support for any class bloc
+
 ## 2.4.4 (Nov 01, 2019)
 - Added change inject in initModule (tests)
 
