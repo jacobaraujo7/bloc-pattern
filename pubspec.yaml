@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  flutter_mobx: ^0.3.3+1
+  mobx: ^0.3.9+1
   flutter_bloc: ^2.0.0
   bloc: ^2.0.0
   rxdart: ^0.22.6

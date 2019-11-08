@@ -1,11 +1,13 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as flutter_bloc;
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'utils/counter_bloc.dart';
 import 'utils/counter_bloc_gerator.dart';
 import 'utils/counter_controller.dart';
+import 'utils/counter_mobx.dart';
 import 'utils/fake_module.dart';
 
 main() {
@@ -137,7 +139,42 @@ main() {
               child: flutter_bloc.BlocBuilder<CounterBlocGerator, int>(
                 bloc: BlocProvider.tag("FakeModule").bloc<CounterBlocGerator>(),
                 builder: (context, data) {
-                  return Text("${data}");
+                  return Text("$data");
+                },
+              ),
+            ),
+          );
+        }),
+      )));
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pump();
+
+      final titleFinder = find.text('1');
+      expect(titleFinder, findsOneWidget);
+    });
+
+    testWidgets('mobx Instance', (WidgetTester tester) async {
+      await tester.pumpWidget(MaterialApp(
+          home: BlocProvider(
+        tagText: "FakeModule",
+        blocs: [
+          Bloc((i) => Counter()),
+        ],
+        child: Builder(builder: (context) {
+
+          final Counter counter = BlocProvider.tag("FakeModule").bloc<Counter>();
+          return Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                counter.increment();
+              },
+              child: Icon(Icons.add),
+            ),
+            body: Center(
+              child: Observer(
+                builder: (_) {
+                  return Text("${counter.value}");
                 },
               ),
             ),

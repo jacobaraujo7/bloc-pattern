@@ -32,7 +32,7 @@ class BlocProvider extends StatefulWidget {
   static bool isTest = false;
 
   ///Use to inject a BLoC. If BLoC is not instantiated, it starts a new singleton instance.
-  static T getBloc<T extends BlocBase>(
+  static T getBloc<T>(
       [Map<String, dynamic> params, String tag = "global"]) {
     try {
       Core core = _injectMapHelper.containsKey(tag)
@@ -64,7 +64,13 @@ class BlocProvider extends StatefulWidget {
   static T getDependency<T>(
       [Map<String, dynamic> params, String tag = "global"]) {
     try {
-      Core core = _injectMap[tag];
+      Core core = _injectMapHelper.containsKey(tag)
+          ? _injectMapHelper[tag]
+          : _injectMap[tag];
+      if (core == null) {
+        throw BlocProviderException(
+            "Module \"$tag\" is not in the widget tree");
+      }
       return core.dependency<T>(params);
     } on BlocProviderException {
       rethrow;

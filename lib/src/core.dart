@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Core {
   DateTime createdAt = DateTime.now();
-  final Map<String, BlocBase> _injectMapBloc = {};
+  final Map<String, dynamic> _injectMapBloc = {};
   final Map<String, dynamic> _injectMapDependency = {};
   final Map<String, Widget> _injectMapView = {};
 
@@ -14,7 +14,7 @@ class Core {
 
   Core({this.blocs, this.dependencies, this.views, this.tag});
 
-  BlocBase bloc<T extends BlocBase>([Map<String, dynamic> params]) {
+  bloc<T>([Map<String, dynamic> params]) {
     String typeBloc = T.toString();
     T blocBase;
     if (_injectMapBloc.containsKey(typeBloc)) {
@@ -34,9 +34,7 @@ class Core {
     if (_injectMapBloc.containsKey(type)) {
       try {
         _injectMapBloc[type].dispose();
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
       _injectMapBloc.remove(type);
     }
   }
@@ -73,8 +71,10 @@ class Core {
 
   dispose() {
     for (String key in _injectMapBloc.keys) {
-      BlocBase bloc = _injectMapBloc[key];
-      bloc.dispose();
+      var bloc = _injectMapBloc[key];
+      if (bloc is Disposable || bloc is BlocBase || bloc is ChangeNotifier) {
+        bloc.dispose();
+      }
     }
     _injectMapBloc.clear();
 
