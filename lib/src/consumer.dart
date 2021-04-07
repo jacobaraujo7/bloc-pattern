@@ -4,24 +4,22 @@ import 'package:flutter/material.dart';
 class Consumer<T extends BlocBase> extends StatefulWidget {
   final Widget Function(BuildContext context, T value) builder;
   final String tag;
-  final bool Function(T oldValue, T newValue) distinct;
+  final bool Function(T oldValue, T newValue)? distinct;
 
-  Consumer(
-      {Key key, @required this.builder, this.tag = "global", this.distinct})
-      : super(key: key);
+  Consumer({Key? key, required this.builder, this.tag = "global", this.distinct}) : super(key: key);
 
   @override
   _ConsumerState<T> createState() => _ConsumerState<T>();
 }
 
 class _ConsumerState<T extends BlocBase> extends State<Consumer<T>> {
-  T value;
+  late T value;
 
   String tag = "global";
 
   void listener() {
     T newValue = BlocProvider.tag(widget.tag).getBloc<T>();
-    if (widget.distinct == null || widget.distinct(value, newValue)) {
+    if (widget.distinct == null || widget.distinct?.call(value, newValue) != true) {
       setState(() {
         value = newValue;
       });

@@ -6,3 +6,7 @@ class Bloc<T> {
 
   Bloc(this.inject, {this.singleton = true});
 }
+
+class EmptyBloc extends Bloc {
+  EmptyBloc() : super((Inject i) {});
+}

@@ -6,3 +6,7 @@ class Dependency<T> {
 
   Dependency(this.inject, {this.singleton = true});
 }
+
+class EmptyDependency extends Dependency {
+  EmptyDependency() : super((Inject i) {});
+}
