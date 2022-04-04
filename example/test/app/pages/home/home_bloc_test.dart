@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:exampleinjector/app/pages/home/home_bloc.dart';
 
 void main() {
-  HomeBloc bloc;
+ late HomeBloc bloc;
 
   setUp(() {
     bloc = HomeBloc();
