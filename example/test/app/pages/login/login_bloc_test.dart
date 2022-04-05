@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:exampleinjector/app/pages/login/login_bloc.dart';
 
 void main() {
-  LoginBloc bloc;
+ late LoginBloc bloc;
 
   setUp(() {
     bloc = LoginBloc();

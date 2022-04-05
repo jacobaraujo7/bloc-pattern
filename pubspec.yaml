@@ -1,11 +1,11 @@
 name: bloc_pattern
 description: Just a package with bases to deploy the BloC your code. Modules, Consumers And BLoC!
-version: 3.0.0
+version: 3.0.0+1
 author: Jacob Moura <jacobaraujo7@gmail.com>
 homepage: https://github.com/jacobaraujo7/bloc-pattern
 
 environment:
-  sdk: ">=2.12-0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:

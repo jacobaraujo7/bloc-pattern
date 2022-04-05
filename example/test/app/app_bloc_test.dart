@@ -6,7 +6,7 @@ import 'package:exampleinjector/app/app_bloc.dart';
 void main() {
   //init Module and Dependency Injection
   initModule(AppModule());
-  AppBloc bloc;
+ late AppBloc bloc;
 
   setUp(() {
     bloc = AppModule.to.bloc<AppBloc>();
