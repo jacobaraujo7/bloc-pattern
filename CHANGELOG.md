@@ -1,3 +1,6 @@
+## 3.0.1 (May 19, 2022)
+- Added Flutter 3.0.0 support
+
 ## 2.5.0 (Nov 08, 2019)
 - Added generic support for any class bloc
 
